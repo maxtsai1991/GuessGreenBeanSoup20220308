@@ -8,10 +8,8 @@ class MainActivity : AppCompatActivity() { // : AppCompatActivity() 繼承的意
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         R.drawable.pig
         R.string.ok
         R.color.messagecolor
-
     }
 }
