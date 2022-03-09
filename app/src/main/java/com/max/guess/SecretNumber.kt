@@ -23,4 +23,5 @@ fun main() {
     println("亂數產生數字為:${secretNumber.secret}")  // 使用SecretNumber物件下的secret方法 ,該方法是亂數產生數字,範圍是1-10
     println("猜的數字為2,與亂數相差值為: ${secretNumber.validate(2)}")       // 傳入一個2數字到該方法,而如果secret亂數產生數字是7 會得到-5 ,如果得到的數字小於0 就請使用者再猜大一點,反之大於0,就猜小一點
     print("猜的數字為2(小於0就猜大一點,大於0就猜小一點): ${secretNumber.validate(2)},已猜的次數(count): ${secretNumber.count}")
+
 }
