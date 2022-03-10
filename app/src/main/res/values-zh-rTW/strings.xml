@@ -7,4 +7,5 @@
     <string name="Bigger">再大一點</string>
     <string name="Smaller">再小一點</string>
     <string name="dialog_title">提示訊息</string>
+    <string name="Cancel">取消(Cancel)</string>
 </resources>

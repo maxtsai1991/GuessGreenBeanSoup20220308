@@ -9,12 +9,17 @@ class SecretNumber {
         2.計數器
         3.validate方法 : 讓人家傳入一個猜測的數字(number: Int) ,跟我現在秘密數字的資料比對
      */
-    val secret: Int = Random().nextInt(10) + 1  //1.產生一個範圍是1-10亂數當祕密數字
+    var secret: Int = Random().nextInt(10) + 1  //1.產生一個範圍是1-10亂數當祕密數字 , 因為有reset方法 需重新產生此方法 ,所以要將val 改成 var , var可以改變的資料
     var count = 0 // 2.計算使用者猜的次數(計數器)
 
     fun validate(number: Int) : Int{ // 3.比對數字是否相符 ,該方法會回傳Int的值 , 帶入一個number參數,該參數為Int整數
         count++                      // 2.每猜一次 就加1
         return number - secret       // 傳入的值 減掉 亂數當祕密數字 如果為負數 代表 傳入的數字比較小,亂數秘密數字比傳入的數字還大
+    }
+
+    fun reset(){
+        secret = Random().nextInt(10) + 1       // reset方法 需重新產生此方法 ,所以要將val 改成 var , var可以改變的資料
+        count = 0                                      // 將猜的次數 歸0
     }
 }
 
