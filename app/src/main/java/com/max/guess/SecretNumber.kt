@@ -17,7 +17,7 @@ class SecretNumber {
         return number - secret       // 傳入的值 減掉 亂數當祕密數字 如果為負數 代表 傳入的數字比較小,亂數秘密數字比傳入的數字還大
     }
 
-    fun reset(){
+    fun reset(){                                       // reset方法是重置次數
         secret = Random().nextInt(10) + 1       // reset方法 需重新產生此方法 ,所以要將val 改成 var , var可以改變的資料
         count = 0                                      // 將猜的次數 歸0
     }
