@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -46,6 +47,17 @@ class MaterialActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(GuessViewModel::class.java)
 
         /**
+         * viewModel.counter.observe()的說明:
+         * 1.從viewModel裡面得到counter,因為viewModel會取得GuessViewModel物件
+         * 2.呼叫.observe()觀察者模式方法,owner可以放Activity(this),Observer(注意是大寫的O)是介面要實作他身上的方法,未來LiveData改變的時候,就會執行他身體上的方法
+         * 3.Observer方法內預設是it:Int! 意思是counter值預設是it,如果不喜歡預設it可以自己取名,這邊取名叫data名稱
+         * 4. counter.setText(data.toString()) 的counter是Layout裡面的counter,不是資料的counter,呼叫.setText()方法,把上面的資料(data),因為data是Int型態,要轉型成String,才能放到.setText()方法裡
+         */
+        viewModel.counter.observe(this, Observer { data ->
+            counter.setText(data.toString())
+        })
+
+        /**
          * fab 是右下角的重完按鈕的id
          */
         binding.fab.setOnClickListener { view ->
@@ -65,8 +77,11 @@ class MaterialActivity : AppCompatActivity() {
     }
 ///////
 
-    fun check(view : View){                                                       // ok按鈕的方法 , 要跟xml > bt_ok按鈕onClick欄位寫一樣名稱,大小寫都要一樣
-        val n = ed_number.text.toString().toInt()                                 // ed_number是文字輸入方塊的ID , .text是取得文字輸入方塊的類別(Editable類別) , .toString() : 取得文字 , .toInt() : 轉成整數 , 再將取得的存到val n
+    fun check(view : View){                                                       // 確認(OK)按鈕的方法 , 要跟xml > bt_ok按鈕onClick欄位寫一樣名稱,大小寫都要一樣
+        viewModel.guess(3)                                                   // 呼叫GuessViewModel.kt的guess方法
+
+       /** 這一大段註解是因為改用MVVM架構,所以不需要使用舊有寫法
+       val n = ed_number.text.toString().toInt()                                 // ed_number是文字輸入方塊的ID , .text是取得文字輸入方塊的類別(Editable類別) , .toString() : 取得文字 , .toInt() : 轉成整數 , 再將取得的存到val n
         println("使用者輸入的數字(number) : $n")                                     // 可在Logcat 搜尋字串 找到n的值 , n = 使用者輸入的數字
         Log.d(TAG,"使用者輸入的數字(number) : " + n)                            // Log出使用者輸入的數字 , Logcat 搜尋MainActivity可得知n
 
@@ -103,6 +118,7 @@ class MaterialActivity : AppCompatActivity() {
             .setPositiveButton(getString(R.string.ok),null)  // 對話框的按鈕 , 可在對按鈕做監聽器 , text > 按鈕名稱 ,有用多語化 ,先打字串後,再用燈泡熱鍵即可產生
             .show()                                    // 對話框完成之後,在用show把它顯示出來
 
+        */
     }
 
 
