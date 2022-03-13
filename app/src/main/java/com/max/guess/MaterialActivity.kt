@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -17,8 +18,9 @@ import kotlinx.android.synthetic.main.activity_main.ed_number
 import kotlinx.android.synthetic.main.content_material.*
 
 class MaterialActivity : AppCompatActivity() {
+    private lateinit var viewModel: GuessViewModel                               // 加lateinit原因:這個屬性會晚一點把它生出來,再給初始值,這樣子就不需在類別後面加上 "?" 或 等於null
     val secretNumber = SecretNumber()
-    val TAG = MaterialActivity::class.java.simpleName                                  // 等於 val TAG = "MainActivity"寫法 ,把"MainActivity"字串抽取出來 好處是 避免在使用Log.d , 把字打錯 ,在Logcat 搜尋一樣搜尋MainActivity ,而不是TAG
+    val TAG = MaterialActivity::class.java.simpleName                            // 等於 val TAG = "MainActivity"寫法 ,把"MainActivity"字串抽取出來 好處是 避免在使用Log.d , 把字打錯 ,在Logcat 搜尋一樣搜尋MainActivity ,而不是TAG
 
 ///////
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -29,6 +31,19 @@ class MaterialActivity : AppCompatActivity() {
         binding = ActivityMaterialBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+
+        /**
+         * viewModel物件的取得
+         * 1.  定一個變數 val viewModel ,命名變數注意事項,第一個字小寫後面的單字大寫
+         * 2.  ViewModelProvider類別,建構子要的是ViewModelStoreOwner,可以用Activity,直接寫this
+         * 3.  呼叫.get方法 : 告訴我類別的名稱,我幫你把它生出來,再交給你這個ViewModel物件 EX: .get(GuessViewModel::class.java)
+         * 4.  記得給get方法的類別用 ::class.java
+         * 5.  從區域變數改成全域屬性(變數)
+         * 5-1.將原本 val viewModel 刪掉val ,然後用燈泡熱鍵,選擇Create property 'viewModel' (產生一個viewModel屬性)
+         * 5-2.之後會有紅線毛毛蟲,是因為他不會再一開始就產生,是經過後續的onCreate之後才會有,處理方式:燈泡熱鍵,選擇Add 'lateinit' Modifier (這個屬性會晚一點把它生出來,再給初始值,這樣子就不需在類別後面加上 "?" 或 等於null)
+         *
+         */
+        viewModel = ViewModelProvider(this).get(GuessViewModel::class.java)
 
         /**
          * fab 是右下角的重完按鈕的id
