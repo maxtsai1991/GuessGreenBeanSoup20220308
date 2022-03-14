@@ -23,7 +23,6 @@ class MaterialActivity : AppCompatActivity() {
 //    val secretNumber = SecretNumber()
     val TAG = MaterialActivity::class.java.simpleName                            // 等於 val TAG = "MainActivity"寫法 ,把"MainActivity"字串抽取出來 好處是 避免在使用Log.d , 把字打錯 ,在Logcat 搜尋一樣搜尋MainActivity ,而不是TAG
 
-///////
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMaterialBinding
 
@@ -42,7 +41,6 @@ class MaterialActivity : AppCompatActivity() {
          * 5.  從區域變數改成全域屬性(變數)
          * 5-1.將原本 val viewModel 刪掉val ,然後用燈泡熱鍵,選擇Create property 'viewModel' (產生一個viewModel屬性)
          * 5-2.之後會有紅線毛毛蟲,是因為他不會再一開始就產生,是經過後續的onCreate之後才會有,處理方式:燈泡熱鍵,選擇Add 'lateinit' Modifier (這個屬性會晚一點把它生出來,再給初始值,這樣子就不需在類別後面加上 "?" 或 等於null)
-         *
          */
         viewModel = ViewModelProvider(this).get(GuessViewModel::class.java)
 
@@ -52,9 +50,10 @@ class MaterialActivity : AppCompatActivity() {
          * 2.呼叫.observe()觀察者模式方法,owner可以放Activity(this),Observer(注意是大寫的O)是介面要實作他身上的方法,未來LiveData改變的時候,就會執行他身體上的方法
          * 3.Observer方法內預設是it:Int! 意思是counter值預設是it,如果不喜歡預設it可以自己取名,這邊取名叫data名稱
          * 4. counter.setText(data.toString()) 的counter是Layout裡面的counter,不是資料的counter,呼叫.setText()方法,把上面的資料(data),因為data是Int型態,要轉型成String,才能放到.setText()方法裡
+         * 程式流程備忘錄:
          */
         viewModel.counter.observe(this, Observer { data ->
-            counter.setText(data.toString())
+            counter.setText(data.toString())                    //這裡的counter是layout 猜次數的Textview id , data是我們上一行自己取名的名稱
         })
 
         viewModel.result.observe(this, Observer { result ->
@@ -74,30 +73,29 @@ class MaterialActivity : AppCompatActivity() {
          * fab 是右下角的重完按鈕的id
          */
         binding.fab.setOnClickListener { view ->
-//            /* 改使用Mvvm方式,則不須使用傳統寫法*/
+            /* 改使用Mvvm方式,則不須使用傳統寫法*/
             viewModel.reset()
             counter.setText(viewModel.count.toString())
             ed_number.setText(" ")
 
-//            /* 註解下面是因為改使用Mvvm方式,則不須使用傳統寫法*/
+        /* 註解下面是因為改使用Mvvm方式,則不使用傳統寫法*/
 //            AlertDialog.Builder(this)
 //                .setTitle("重新玩 (Replay Game) !!!")
 //                .setMessage("確定嗎  (Are you sure) ?")
-//                .setPositiveButton(getString(R.string.ok), {dialog,which ->                        // 確定, 當點擊確定代表要重玩, 監聽器用lambda表示 , lambda表示用 一對大括號{} , 大括號裡面第一個參數用dialog ,第二個參數叫你按了哪一種按鈕(which) , 接著用lambda(->) ,接重置方法
-////                    secretNumber.reset()                                       //【因為改成MVVM架構所以不須這行】,改寫成viewModel.reset()
+//                .setPositiveButton(getString(R.string.ok), {dialog,which ->     // 確定, 當點擊確定代表要重玩, 監聽器用lambda表示 , lambda表示用 一對大括號{} , 大括號裡面第一個參數用dialog ,第二個參數叫你按了哪一種按鈕(which) , 接著用lambda(->) ,接重置方法
+//                    secretNumber.reset()                                       //【因為改成MVVM架構所以不須這行】,改寫成viewModel.reset()
 //                    viewModel.reset()
 //                   counter.setText(secretNumber.count.toString())               //【因為改成MVVM架構所以不須這行】, 重玩方法執行完後,在將0 setText回去
 //                    ed_number.setText("")                                        // 重玩後把輸入框先前輸入的清掉
 //                })
-//                .setNeutralButton(getString(R.string.Cancel),null)        // 取消 , 目前還未對取消做監聽器處理,所以按了會沒反應
+//                .setNeutralButton(getString(R.string.Cancel),null)              // 取消 , 目前還未對取消做監聽器處理,所以按了會沒反應
 //                .show()
         }
 //        counter.setText(secretNumber.count.toString())                           // counter 是已猜次數TextView 的 ID
 //        Log.d(TAG,"秘密數字(secret) : " + secretNumber.secret)
     }
-///////
 
-    fun check(view : View){                                                       // 確認(OK)按鈕的方法 , 要跟xml > bt_ok按鈕onClick欄位寫一樣名稱,大小寫都要一樣
+    fun check(view : View){                                                       // 確認(OK)按鈕的方法 , 有在content_material.xml的確認按鈕做監聽器(onClick欄位) , 填寫該方法名稱(check) ,ps.大小寫兩邊都要一樣
         val n = ed_number.text.toString().toInt()
         viewModel.guess(n)                                                        // 呼叫GuessViewModel.kt的guess方法
 
