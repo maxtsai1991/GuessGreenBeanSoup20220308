@@ -1,5 +1,6 @@
 package com.max.guess
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -94,6 +95,12 @@ class MaterialActivity : AppCompatActivity() {
         }
         counter.setText(secretNumber.count.toString())                           // counter 是已猜次數TextView 的 ID
         Log.d(TAG,"MaterialActivity_onCreate_Secret(秘密數字): " + secretNumber.secret)
+
+        val count = getSharedPreferences("guess",Context.MODE_PRIVATE)
+            .getInt("REC_COUNTER",-1)
+        val nick = getSharedPreferences("guess",Context.MODE_PRIVATE)
+            .getString("REC_NICKNAME",null)
+        Log.d(TAG, "data : $count / $nick");
 
     }
 
