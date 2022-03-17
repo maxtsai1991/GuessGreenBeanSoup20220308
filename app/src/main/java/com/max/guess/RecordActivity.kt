@@ -6,7 +6,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_record.*
 
 /**
- * ADB除錯工具指令 (此範例是用getSharedPreferences方法寫入xml,並用ADB指令查看有無盡到檔案裏面):
+ * ADB除錯工具指令 (此範例是用getSharedPreferences方法寫入資料到模擬器,並用ADB指令查看有無進到檔案裏面):
  * 1.  複製SDK路徑 (左上,File > Project Structure > SDK Location > 複製Android SDK location 路徑) ex: C:\Users\NO812E04\AppData\Local\Android\Sdk
  * 2.  打開Terminal (下方,在Build左邊) , 如打開看到在D槽 ,就先切換到C槽 打 c:
  * 3.  進入到SDK路徑 EX: cd C:\Users\NO812E04\AppData\Local\Android\Sdk
@@ -27,14 +27,20 @@ class RecordActivity : AppCompatActivity() {
         setContentView(R.layout.activity_record)
         val count = intent.getIntExtra("COUNTER(次數)", -1)       // .getIntExtra("和上一頁自訂義字串標籤要寫一模一樣", 當沒有拿到資料時給予預設值) ,此資料是由MateriaActivity.kt傳遞過來的
         counter.setText(count.toString())                                         //  MateriaActivity.kt上一頁取得的資料(count)轉成字串,貼到TextView上(id:counter)
-
-        bt_save.setOnClickListener { view ->
+        /**
+         * 儲存監聽器
+         * 1. 取得使用者輸入欄位的字串
+         * 2. 將使用者輸入的暱稱及計算器次數 存進檔案中
+         * 3. 利用SharedPreferences 存到模擬器資料夾 檔名為guess.xml
+         * 4.
+         */
+        bt_save.setOnClickListener { view ->                                      // SAVE監聽器
             val nick = et_nickname.text.toString()                                // .text 像是Java的getText 得到文字資料 ；.toString() 得到他的字串值
             getSharedPreferences("guess", Context.MODE_PRIVATE)             // getSharedPreferences ( 檔案名稱 , 存取權限 ) , 存取權限不用背 , 打全大寫MODE就可以選你要的權限 , Context.MODE_PRIVATE 未來儲存的資料只有我這個APP可以使用
                 .edit()                                                           // 編輯器,要使用編輯器才有辦法寫入資料
                 .putInt("REC_COUNTER",count)                                      // .putInt( 自訂義資料的儲存名字 , 計數器 ) 編輯器放入次數計數器(count)
                 .putString("REC_NICKNAME",nick)                                   // .putString(自訂義資料的儲存名字,暱稱)
-                .apply()                                                          //
+                .apply()                                                          // 把資料放完後要儲存 可以呼叫兩種方法 1 .commit() : 在該行之後會把資料寫進去   2 .apply() : 不一定會在該行之後寫進去,會利用技巧在有空的時候寫進去 ; 如再下一行就要讀取他就要用commit()方法,反之則用apply()方法
         }
     }
 }

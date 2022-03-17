@@ -96,11 +96,14 @@ class MaterialActivity : AppCompatActivity() {
         counter.setText(secretNumber.count.toString())                           // counter 是已猜次數TextView 的 ID
         Log.d(TAG,"MaterialActivity_onCreate_Secret(秘密數字): " + secretNumber.secret)
 
-        val count = getSharedPreferences("guess",Context.MODE_PRIVATE)
-            .getInt("REC_COUNTER",-1)
+        /**
+         * 使用SharedPreferences讀取檔案資料, 可以在logcat查看
+         */
+        val count = getSharedPreferences("guess",Context.MODE_PRIVATE)      // getSharedPreferences( 檔名 , 權限 ) 檔名要寫得跟RecordActivity.kt寫入頁一樣 , Context.MODE_PRIVATE權限: 代表只有該APP有權限
+            .getInt("REC_COUNTER",-1)                                // getInt( 自己命名的計數器名字 , 當取得不到則必須給預設值(-1) ) : 取得資料用get,這裡要取得計數器次數所以用getInt
         val nick = getSharedPreferences("guess",Context.MODE_PRIVATE)
-            .getString("REC_NICKNAME",null)
-        Log.d(TAG, "data : $count / $nick");
+            .getString("REC_NICKNAME",null)                          // getString( 自己命名的暱稱 , 當取得不到則必須給預設值(null) ) : 這裡要取得暱稱所以用getString
+        Log.d(TAG, "(data) 計數器次數 : $count / 暱稱 : $nick");
 
     }
 
