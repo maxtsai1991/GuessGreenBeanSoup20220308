@@ -1,5 +1,6 @@
 package com.max.guess
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -20,7 +21,7 @@ import kotlinx.android.synthetic.main.content_material.*
 
 class MaterialActivity : AppCompatActivity() {
     private lateinit var viewModel: GuessViewModel                               // 加lateinit原因:這個屬性會晚一點把它生出來,再給初始值,這樣子就不需在類別後面加上 "?" 或 等於null
-//    val secretNumber = SecretNumber()
+    val secretNumber = SecretNumber()                                            // Kotlin 出 SecretNumber物件
     val TAG = MaterialActivity::class.java.simpleName                            // 等於 val TAG = "MainActivity"寫法 ,把"MainActivity"字串抽取出來 好處是 避免在使用Log.d , 把字打錯 ,在Logcat 搜尋一樣搜尋MainActivity ,而不是TAG
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -78,28 +79,29 @@ class MaterialActivity : AppCompatActivity() {
             counter.setText(viewModel.count.toString())
             ed_number.setText(" ")
 
-        /* 註解下面是因為改使用Mvvm方式,則不使用傳統寫法*/
-//            AlertDialog.Builder(this)
-//                .setTitle("重新玩 (Replay Game) !!!")
-//                .setMessage("確定嗎  (Are you sure) ?")
-//                .setPositiveButton(getString(R.string.ok), {dialog,which ->     // 確定, 當點擊確定代表要重玩, 監聽器用lambda表示 , lambda表示用 一對大括號{} , 大括號裡面第一個參數用dialog ,第二個參數叫你按了哪一種按鈕(which) , 接著用lambda(->) ,接重置方法
-//                    secretNumber.reset()                                       //【因為改成MVVM架構所以不須這行】,改寫成viewModel.reset()
-//                    viewModel.reset()
-//                   counter.setText(secretNumber.count.toString())               //【因為改成MVVM架構所以不須這行】, 重玩方法執行完後,在將0 setText回去
-//                    ed_number.setText("")                                        // 重玩後把輸入框先前輸入的清掉
-//                })
-//                .setNeutralButton(getString(R.string.Cancel),null)              // 取消 , 目前還未對取消做監聽器處理,所以按了會沒反應
-//                .show()
+        /* 傳統寫法,如使用Mvvm方式,則需註解下面*/
+            AlertDialog.Builder(this)
+                .setTitle("重新玩 (Replay Game) !!!")
+                .setMessage("確定嗎  (Are you sure) ?")
+                .setPositiveButton(getString(R.string.ok), {dialog,which ->     // 確定, 當點擊確定代表要重玩, 監聽器用lambda表示 , lambda表示用 一對大括號{} , 大括號裡面第一個參數用dialog ,第二個參數叫你按了哪一種按鈕(which) , 接著用lambda(->) ,接重置方法
+                    secretNumber.reset()                                       //【因為改成MVVM架構所以不須這行】,改寫成viewModel.reset()
+                    viewModel.reset()
+                   counter.setText(secretNumber.count.toString())               //【因為改成MVVM架構所以不須這行】, 重玩方法執行完後,在將0 setText回去
+                    ed_number.setText("")                                        // 重玩後把輸入框先前輸入的清掉
+                })
+                .setNeutralButton(getString(R.string.Cancel),null)              // 取消 , 目前還未對取消做監聽器處理,所以按了會沒反應
+                .show()
         }
-//        counter.setText(secretNumber.count.toString())                           // counter 是已猜次數TextView 的 ID
-//        Log.d(TAG,"秘密數字(secret) : " + secretNumber.secret)
+        counter.setText(secretNumber.count.toString())                           // counter 是已猜次數TextView 的 ID
+        Log.d(TAG,"MaterialActivity_onCreate_Secret(秘密數字): " + secretNumber.secret)
+
     }
 
     fun check(view : View){                                                       // 確認(OK)按鈕的方法 , 有在content_material.xml的確認按鈕做監聽器(onClick欄位) , 填寫該方法名稱(check) ,ps.大小寫兩邊都要一樣
-        val n = ed_number.text.toString().toInt()
-        viewModel.guess(n)                                                        // 呼叫GuessViewModel.kt的guess方法
+//        val n = ed_number.text.toString().toInt()
+//        viewModel.guess(n)                                                        // 呼叫GuessViewModel.kt的guess方法
 
-       /** 這一大段註解是因為改用MVVM架構,所以不需要使用舊有寫法
+       /** 舊有寫法 ,如使用MVVM架構,要註解下面一大段 */
        val n = ed_number.text.toString().toInt()                                 // ed_number是文字輸入方塊的ID , .text是取得文字輸入方塊的類別(Editable類別) , .toString() : 取得文字 , .toInt() : 轉成整數 , 再將取得的存到val n
         println("使用者輸入的數字(number) : $n")                                     // 可在Logcat 搜尋字串 找到n的值 , n = 使用者輸入的數字
         Log.d(TAG,"使用者輸入的數字(number) : " + n)                            // Log出使用者輸入的數字 , Logcat 搜尋MainActivity可得知n
@@ -127,17 +129,28 @@ class MaterialActivity : AppCompatActivity() {
         counter.setText(secretNumber.count.toString())                              // counter 是已猜次數TextView 的 ID ,這裡要寫這段 才會累加次數
 
         /**
-         * Toast & AlertDialog 可擇一使用
+         * Toast & AlertDialog
+         * Toast: 吐司
+         * AlertDialog :
+         * 1. 對話框的按鈕 , 可在對按鈕做監聽器,將null改寫監聽器動作 EX :  .setPositiveButton(getString(R.string.ok),null) 改成 .setPositiveButton(getString(R.string.ok),{dialog,which -> 寫條件判斷 })
+         * 2. 當使用者猜對數字則跳轉到RecordActivity,用Intent類別跳轉 EX: val intent = Intent(this,RecordActivity::class.java)
+         * 3. startActivity(intent) 此方法產生出intent
+         * 4. intent.putExtra(自訂義字串名字,要傳遞的資料)       傳遞資料到下一頁Activity , 自訂義字串名字 在下一頁取得時 要打一模一樣,才能拿到傳遞的資料
          */
         Toast.makeText(this,message, Toast.LENGTH_LONG).show()
+        AlertDialog.Builder(this)                                                // AlertDialog(對話框顯示方式) 要選擇 (androidx.appcompat.app) , 因為這樣新舊手機版本都支援 , .Builder(this) > 產生複雜各種型態物件
+            .setTitle(getString(R.string.dialog_title))                                 // 對話框的標題 有用多語化 ,先打字串後,再用燈泡熱鍵即可產生
+            .setMessage(message)                                                        // 對話框的訊息
+            .setPositiveButton(getString(R.string.ok),{dialog,which ->
+                if(diff == 0){                                                          // 當使用者猜對數字則跳轉到RecordActivity,用Intent類別跳轉
+                    val intent = Intent(this,RecordActivity::class.java)
+                    intent.putExtra("COUNTER(次數)",secretNumber.count)           //  intent.putExtra(自定義的字串標籤,要傳遞過去的值(資料)) 注意事項:自定義標籤 在下一頁RecordActivity取得此資料時,填寫的標籤要寫一模一樣
+                    startActivity(intent)
+                }
+            })
+            .show()                                                                     // 對話框完成之後,在用show把它顯示出來
 
-        AlertDialog.Builder(this)               // AlertDialog(對話框顯示方式) 要選擇 (androidx.appcompat.app) , 因為這樣新舊手機版本都支援 , .Builder(this) > 產生複雜各種型態物件
-            .setTitle(getString(R.string.dialog_title))// 對話框的標題 有用多語化 ,先打字串後,再用燈泡熱鍵即可產生
-            .setMessage(message)                       // 對話框的訊息
-            .setPositiveButton(getString(R.string.ok),null)  // 對話框的按鈕 , 可在對按鈕做監聽器 , text > 按鈕名稱 ,有用多語化 ,先打字串後,再用燈泡熱鍵即可產生
-            .show()                                    // 對話框完成之後,在用show把它顯示出來
 
-        */
     }
 
 

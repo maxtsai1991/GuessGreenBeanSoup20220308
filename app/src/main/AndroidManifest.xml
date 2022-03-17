@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GuessGreenBeanSoup">
         <activity
+            android:name=".RecordActivity"
+            android:exported="false" />
+        <activity
             android:name=".MaterialActivity"
             android:exported="true"
             android:label="@string/title_activity_material"
