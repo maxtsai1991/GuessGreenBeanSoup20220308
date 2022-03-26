@@ -1,6 +1,7 @@
 package com.max.guess
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_record.*
@@ -41,6 +42,10 @@ class RecordActivity : AppCompatActivity() {
                 .putInt("REC_COUNTER",count)                                      // .putInt( 自訂義資料的儲存名字 , 計數器 ) 編輯器放入次數計數器(count)
                 .putString("REC_NICKNAME",nick)                                   // .putString(自訂義資料的儲存名字,暱稱)
                 .apply()                                                          // 把資料放完後要儲存 可以呼叫兩種方法 1 .commit() : 在該行之後會把資料寫進去   2 .apply() : 不一定會在該行之後寫進去,會利用技巧在有空的時候寫進去 ; 如再下一行就要讀取他就要用commit()方法,反之則用apply()方法
+            val intent = Intent()
+            intent.putExtra("NICK",nick)
+            setResult(RESULT_OK,intent)                                           // setResult() 方法規定要有一個int值(resultCode),不需要去被結果碼,直接打RESULT_OK,當我們按下ok之後,會將結果碼帶到結果裡面
+            finish()                                                              // 當MaterialActivity.kt猜對數字後,會跳到RecordActivity.kt,而點選save按鈕後會呼叫finish()方法,結束該頁並回到MaterialActivity.kt頁面(因RecordActivity前一個activity是MaterialActivity所以結束後會回到MaterialActivity)
         }
     }
 }

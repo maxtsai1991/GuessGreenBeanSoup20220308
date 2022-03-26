@@ -1,11 +1,13 @@
 package com.max.guess
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -22,8 +24,10 @@ import kotlinx.android.synthetic.main.content_material.*
 
 /**
  * 複寫方法快捷鍵 ctrl + o
+ * 將程式碼抽出去變獨立方法快捷鍵 ctrl + alt + m
  */
 class MaterialActivity : AppCompatActivity() {
+    private val REQUEST_RECORD = 100
     private lateinit var viewModel: GuessViewModel                               // 加lateinit原因:這個屬性會晚一點把它生出來,再給初始值,這樣子就不需在類別後面加上 "?" 或 等於null
     val secretNumber = SecretNumber()                                            // Kotlin 出 SecretNumber物件
     val TAG = MaterialActivity::class.java.simpleName                            // 等於 val TAG = "MainActivity"寫法 ,把"MainActivity"字串抽取出來 好處是 避免在使用Log.d , 把字打錯 ,在Logcat 搜尋一樣搜尋MainActivity ,而不是TAG
@@ -85,17 +89,7 @@ class MaterialActivity : AppCompatActivity() {
             ed_number.setText(" ")
 
         /* 傳統寫法,如使用Mvvm方式,則需註解下面*/
-            AlertDialog.Builder(this)
-                .setTitle("重新玩 (Replay Game) !!!")
-                .setMessage("確定嗎  (Are you sure) ?")
-                .setPositiveButton(getString(R.string.ok), {dialog,which ->     // 確定, 當點擊確定代表要重玩, 監聽器用lambda表示 , lambda表示用 一對大括號{} , 大括號裡面第一個參數用dialog ,第二個參數叫你按了哪一種按鈕(which) , 接著用lambda(->) ,接重置方法
-                    secretNumber.reset()                                       //【因為改成MVVM架構所以不須這行】,改寫成viewModel.reset()
-                    viewModel.reset()
-                   counter.setText(secretNumber.count.toString())               //【因為改成MVVM架構所以不須這行】, 重玩方法執行完後,在將0 setText回去
-                    ed_number.setText("")                                        // 重玩後把輸入框先前輸入的清掉
-                })
-                .setNeutralButton(getString(R.string.Cancel),null)              // 取消 , 目前還未對取消做監聽器處理,所以按了會沒反應
-                .show()
+            replay()
         }
         counter.setText(secretNumber.count.toString())                           // counter 是已猜次數TextView 的 ID
         Log.d(TAG,"MaterialActivity_onCreate_Secret(秘密數字): " + secretNumber.secret)
@@ -109,6 +103,20 @@ class MaterialActivity : AppCompatActivity() {
             .getString("REC_NICKNAME",null)                          // getString( 自己命名的暱稱 , 當取得不到則必須給預設值(null) ) : 這裡要取得暱稱所以用getString
         Log.d(TAG, "(data) 計數器次數 : $count / 暱稱 : $nick");
 
+    }
+
+    private fun replay() {
+        AlertDialog.Builder(this)
+            .setTitle("重新玩 (Replay Game) !!!")
+            .setMessage("確定嗎  (Are you sure) ?")
+            .setPositiveButton(getString(R.string.ok), { dialog, which ->     // 確定, 當點擊確定代表要重玩, 監聽器用lambda表示 , lambda表示用 一對大括號{} , 大括號裡面第一個參數用dialog ,第二個參數叫你按了哪一種按鈕(which) , 接著用lambda(->) ,接重置方法
+                    secretNumber.reset()                                       //【因為改成MVVM架構所以不須這行】,改寫成viewModel.reset()
+                    viewModel.reset()
+                    counter.setText(secretNumber.count.toString())               //【因為改成MVVM架構所以不須這行】, 重玩方法執行完後,在將0 setText回去
+                    ed_number.setText("")                                        // 重玩後把輸入框先前輸入的清掉
+                })
+            .setNeutralButton(getString(R.string.Cancel), null)              // 取消 , 目前還未對取消做監聽器處理,所以按了會沒反應
+            .show()
     }
 
     /**
@@ -199,13 +207,29 @@ class MaterialActivity : AppCompatActivity() {
                 if(diff == 0){                                                          // 當使用者猜對數字則跳轉到RecordActivity,用Intent類別跳轉
                     val intent = Intent(this,RecordActivity::class.java)
                     intent.putExtra("COUNTER(次數)",secretNumber.count)           //  intent.putExtra(自定義的字串標籤,要傳遞過去的值(資料)) 注意事項:自定義標籤 在下一頁RecordActivity取得此資料時,填寫的標籤要寫一模一樣
-                    startActivity(intent)
+//                    startActivity(intent)                                             // 註解 startActivity(intent) 改用 startActivityForResult(intent,REQUEST_RECORD)
+                    startActivityForResult(intent,REQUEST_RECORD)                       // startActivityForResult()方法,是啟動第二個activity(為了某些結果而啟動activity),可搭配第二個activity(RecordActivity.kt)的setResult()方法使用,要在finish()方法前使用,
                 }
             })
             .show()                                                                     // 對話框完成之後,在用show把它顯示出來
-
-
     }
 
-
+    /**
+     * 程式邏輯:MaterialActivity.kt 猜對數字後 > 跳到RecordActivity.kt > 輸入暱稱,點選SAVE > 將暱稱帶回 MaterialActivity.kt (logd印出暱稱),並且跳出重玩視窗(replay())
+     * 複寫onActivityResult方法的前因後果:
+     * 1.使用startActivityForResult()方法 : 為了某些結果而啟動這個activity
+     * 2.這個activity啟動後,要在finish之前要設定結果(呼叫setResult()方法),之後在finish
+     * 3.注意:必須要在前一個activity(MaterialActivity.kt)身上複寫onActivityResult方法,才可以接收到另外一個activity(RecordActivity.kt)之後所傳回來的資料
+     * 4.這樣的實作方式,就可以讓你得到資料
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == REQUEST_RECORD){
+            if(resultCode == Activity.RESULT_OK){
+                val nickname = data?.getStringExtra("NICK") //因為data不一定會有,所以要使用 "?"
+                Log.d(TAG, "onActivityResult: ${nickname}");
+                replay()
+            }
+        }
+    }
 }
