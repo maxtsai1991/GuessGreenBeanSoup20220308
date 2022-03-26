@@ -20,6 +20,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.ed_number
 import kotlinx.android.synthetic.main.content_material.*
 
+/**
+ * 複寫方法快捷鍵 ctrl + o
+ */
 class MaterialActivity : AppCompatActivity() {
     private lateinit var viewModel: GuessViewModel                               // 加lateinit原因:這個屬性會晚一點把它生出來,再給初始值,這樣子就不需在類別後面加上 "?" 或 等於null
     val secretNumber = SecretNumber()                                            // Kotlin 出 SecretNumber物件
@@ -30,6 +33,7 @@ class MaterialActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate: ");
         binding = ActivityMaterialBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
@@ -105,6 +109,46 @@ class MaterialActivity : AppCompatActivity() {
             .getString("REC_NICKNAME",null)                          // getString( 自己命名的暱稱 , 當取得不到則必須給預設值(null) ) : 這裡要取得暱稱所以用getString
         Log.d(TAG, "(data) 計數器次數 : $count / 暱稱 : $nick");
 
+    }
+
+    /**
+     * 重新build專案到模擬器生命週期:
+     * onCreate > onStart > onResume
+     * 當猜對數字時,畫面會由MaterialActivity.kt > RecordActivity.kt, 此時的MaterialActivity生命週期:
+     * onPause > onStop
+     * 當菜對數字後,跳到RecordActivity.kt,再RecordActivity.kt返回到MaterialActivity.kt, 此時的MaterialActivity生命週期:
+     * onRestart > onStart > onResume
+     * 當不玩猜數字,返回到模擬器首頁,此時的MaterialActivity生命週期:
+     * onPause > onStop > onDestroy
+     */
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart: ");
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop: ");
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause: ");
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume: ");
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d(TAG, "onRestart: ");
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy: ");
     }
 
     fun check(view : View){                                                       // 確認(OK)按鈕的方法 , 有在content_material.xml的確認按鈕做監聽器(onClick欄位) , 填寫該方法名稱(check) ,ps.大小寫兩邊都要一樣
