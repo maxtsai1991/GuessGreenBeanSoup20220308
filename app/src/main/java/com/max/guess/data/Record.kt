@@ -9,8 +9,8 @@ import androidx.room.PrimaryKey
  * Room 單元 : 儲存猜數字紀錄 ,
  * Room的設計基本三樣要件 , 就可以使用了 :
  * 1. Entity (類別,Record.kt)
- * 2. Dao (介面,RecordDao.kt) : 存取Record的介面
- * 3. Database (抽象類別,GameDatabase.kt) : 要讓使用者,可以呼叫得到資料庫的一個抽象類別
+ * 2. Dao (介面,RecordDao.kt) : 存取 Record
+ * 3. Database (抽象類別,GameDatabase.kt) : 要讓使用者,可以呼叫得到資料庫的一個抽象類別 , 裡面有個方法 ,該方法可以得到RecordDao物件
  *
  * class Record 類別說明:
  * 1. 最後要儲存到資料庫的物件

@@ -17,6 +17,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.room.Room
+import com.max.guess.data.GameDatabase
+import com.max.guess.data.Record
 import com.max.guess.databinding.ActivityMaterialBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.ed_number
@@ -102,6 +105,22 @@ class MaterialActivity : AppCompatActivity() {
         val nick = getSharedPreferences("guess",Context.MODE_PRIVATE)
             .getString("REC_NICKNAME",null)                          // getString( 自己命名的暱稱 , 當取得不到則必須給預設值(null) ) : 這裡要取得暱稱所以用getString
         Log.d(TAG, "(data) 計數器次數 : $count / 暱稱 : $nick");
+
+        // Room test
+        /**
+         * 1. 先得到database
+         * 2. Room.databaseBuilder( context , 傳入GameDatabase類別 , 自訂義db名字ex:game.db )
+         * 3. database生成之後,必須呼叫.build()方法,才可以產生出你要的GameDatabase物件
+         * 4. 建立產生測試用紀錄
+         * 5. 不能用UI Main 主執行緒會報錯, 要用子執行緒 EX :  Thread(){ database.recordDao().insert(record) } ; 報錯訊息: 無法訪問主線程上的數據庫，因為它可能會長時間鎖定 ui (cannot access database on the main thread since it may potentially lock the ui for a long period of time.)
+         */
+        val database = Room.databaseBuilder(this,       // 從Room類別,身上有一個方法(databaseBuilder),利用此方法產生出一個物件,這個物件就是GameDatabase物件
+        GameDatabase::class.java,"game.db")
+            .build()
+        val record = Record("Maxx",3)          // 產生測試用記錄,每次模擬器重build會在game.db資料庫建立一筆暱稱為Maxx猜測次數為3及流水號的資料 EX : Maxx|3|1 ,可用adb指令在Terminal查詢
+        Thread(){
+            database.recordDao().insert(record)
+        }.start()                                               // .start()方法:執行該執行緒
 
     }
 
