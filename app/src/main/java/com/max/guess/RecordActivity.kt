@@ -74,12 +74,18 @@ class RecordActivity : AppCompatActivity() {
              * 4. 建立產生測試用紀錄
              * 5. 不能用UI Main 主執行緒會報錯, 要用子執行緒 EX :  Thread(){ database.recordDao().insert(record) } ; 報錯訊息: 無法訪問主線程上的數據庫，因為它可能會長時間鎖定 ui (cannot access database on the main thread since it may potentially lock the ui for a long period of time.)
              */
-            val database = Room.databaseBuilder(this,
-                GameDatabase::class.java,"game.db")
-                .build()
-            val record = Record(nick,count)
+
+//            val database = Room.databaseBuilder(this,
+//                GameDatabase::class.java,"game.db")
+//                .build()
+
+//            val record = Record(nick,count)
+
             Thread(){
-                database.recordDao().insert(record)
+//                database.recordDao().insert(record)
+                GameDatabase.getInstance(this)?.recordDao()?. // 用單例模式取得GameDatabase物件,因有可能是null所以要加"?",在使用GameDatabase物件下的.recordDao()方法,取得Dao,同樣有可能是null所以要加"?"
+//                insert(record)
+                insert(Record(nick,count)) // 縮寫方式 等於 database.recordDao().insert(record) ; insert(record)
             }.start()
 
             val intent = Intent()

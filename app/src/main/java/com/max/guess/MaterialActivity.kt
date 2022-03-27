@@ -3,6 +3,7 @@ package com.max.guess
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -114,13 +115,23 @@ class MaterialActivity : AppCompatActivity() {
          * 4. 建立產生測試用紀錄
          * 5. 不能用UI Main 主執行緒會報錯, 要用子執行緒 EX :  Thread(){ database.recordDao().insert(record) } ; 報錯訊息: 無法訪問主線程上的數據庫，因為它可能會長時間鎖定 ui (cannot access database on the main thread since it may potentially lock the ui for a long period of time.)
          */
-        val database = Room.databaseBuilder(this,       // 從Room類別,身上有一個方法(databaseBuilder),利用此方法產生出一個物件,這個物件就是GameDatabase物件
-        GameDatabase::class.java,"game.db")
-            .build()
-        val record = Record("Maxx",3)          // 產生測試用記錄,每次模擬器重build會在game.db資料庫建立一筆暱稱為Maxx猜測次數為3及流水號的資料 EX : Maxx|3|1 ,可用adb指令在Terminal查詢
-        Thread(){
-            database.recordDao().insert(record)
-        }.start()                                               // .start()方法:執行該執行緒
+        /**因使用單例模式,所以註解掉*/
+//        val database = Room.databaseBuilder(this,       // 從Room類別,身上有一個方法(databaseBuilder),利用此方法產生出一個物件,這個物件就是GameDatabase物件
+//        GameDatabase::class.java,"game.db")
+//            .build()
+//        val record = Record("Maxx",3)          // 產生測試用記錄,每次模擬器重build會在game.db資料庫建立一筆暱稱為Maxx猜測次數為3及流水號的資料 EX : Maxx|3|1 ,可用adb指令在Terminal查詢
+//        Thread(){
+//            database.recordDao().insert(record)
+//        }.start()                                               // .start()方法:執行該執行緒
+
+        /**單例模式*/
+        // Room read test
+        AsyncTask.execute {
+            val list = GameDatabase.getInstance(this)?.recordDao()?.getAll()
+            list?.forEach {
+                Log.d(TAG, "record: ${it.nickname} ${it.counter}");
+            }
+        }
 
     }
 
