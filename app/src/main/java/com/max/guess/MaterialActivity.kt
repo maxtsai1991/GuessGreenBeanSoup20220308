@@ -232,4 +232,26 @@ class MaterialActivity : AppCompatActivity() {
             }
         }
     }
+
+    /**
+     * 5-5章節 測試範例 : 活用Kotlin的apply與also擴充語法,提升程式碼可讀性
+     * 1.建立Intent物件,得到有RecordActivity類別的物件 EX : val intent = Intent(this,RecordActivity::class.java)
+     * 2.放入資料 EX : intent.putExtra("A","abc")
+     * 3.將資料帶到RecordActivity.kt頁面 EX : startActivity(intent)
+     */
+    fun test(){
+        /** java 寫法 */
+        val intent = Intent(this,RecordActivity::class.java)
+        intent.putExtra("A","abc")
+        intent.putExtra("BB","Testing")
+        startActivity(intent)
+        /** Kotlin 寫法 */
+        Intent(this,RecordActivity::class.java).apply {
+            putExtra("A","abc")
+            putExtra("BB","Testing")
+//            startActivity(intent) // 等同於 .also { intent -> startActivity(intent) }
+        }.also { intent ->
+            startActivity(intent)
+        }
+    }
 }
