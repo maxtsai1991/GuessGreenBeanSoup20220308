@@ -49,6 +49,12 @@ dependencies {
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
     // // Kotlin MVVM 要導入以上這些
 
+    def room_version = "2.3.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-common:$room_version"
+//    annotationProcessor "androidx.room:room-compiler:$room_version" // java  的
+    kapt "androidx.room:room-compiler:$room_version"                // kotlin的
+
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
