@@ -1,5 +1,6 @@
 package com.max.guess
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -56,10 +57,11 @@ import kotlinx.android.synthetic.main.row_function.view.*
  */
 class RecyclerViewMainActivity : AppCompatActivity() {
     val TAG = RecyclerViewMainActivity::class.java.simpleName
+    /** 7-2章節 新增Guess game(猜數字遊戲) & Record list(紀錄清單) 分別導到MaterialActivity & RecordListActivity*/
     val functions = listOf<String>(     //array字串,listof是一個集合,裏頭放字串
         "Camer(打開相機)",
-        "Invite friend(邀請朋友)",
-        "Parking(停車處)",
+        "Guess game(猜數字遊戲)",
+        "Record list(遊戲紀錄清單)",
         "Download coupons(下載優惠券)",
         "News(最新消息)",
         "Maps(地圖)",
@@ -96,19 +98,36 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             return holder
         }
 
-        override fun onBindViewHolder(holder: FunctionHolder, position: Int) {
-            holder.nameText.text = functions.get(position)              // position就是當他要顯示第幾列資料的時候會傳進來的一個整數值
+        override fun onBindViewHolder(holder: FunctionHolder, position: Int) { // onBindViewHolder說明: 當資料有的時候,會被自動呼叫
+            holder.nameText.text = functions.get(position)                     // position就是當他要顯示第幾列資料的時候會傳進來的一個整數值
+            //  holder.itemView (holder裡面的物件,叫做整塊的view)這整塊的view如果被人按了,就會觸發點擊事件
+            holder.itemView.setOnClickListener {
+                functionClicked(position)                                     // 將點擊選項方法獨立出來
+                Log.d(TAG, "recycleritem : " + position)                 // 測試點擊選項的position
+            }
 
-            // 測試點擊選項監聽事件
-//            holder.nameText.setOnClickListener {
-//                Log.d(TAG, "recycleritem : " + position)
-//            }
         }
 
         override fun getItemCount(): Int { // 裡面有幾筆資料 , 這邊範例資料為假資料(在該頁面的屬性) EX : val functions
             return functions.size
         }
 
+    }
+
+    private fun functionClicked(position: Int) {
+        /**
+         * position 說明:
+         * position 0 代表假資料的Camer(打開相機)選項
+         * position 1 代表假資料的Guess game(猜數字遊戲)選項
+         * position 2 代表假資料的Record list(遊戲紀錄清單選項
+         * 以此類推
+         * 7-2章節 目前只有導兩個不同頁面 ,其他以外未設定, 就用else -> return
+         */
+        when(position){// 判斷position是什麼樣的值
+            1 -> startActivity(Intent(this,MaterialActivity::class.java))
+            2 -> startActivity(Intent(this,RecordListActivity::class.java))
+            else -> return
+        }
     }
 
     class FunctionHolder(view: View) : RecyclerView.ViewHolder(view){ // 注意事項 Holder 有建構子EX:(view: View) ,直接繼承RecyclerView裡面的ViewHolder,他只有一個建構子就是view物件
