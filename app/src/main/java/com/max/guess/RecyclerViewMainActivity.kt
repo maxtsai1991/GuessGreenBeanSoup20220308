@@ -2,10 +2,12 @@ package com.max.guess
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_recycler_view_main.*
@@ -41,15 +43,16 @@ import kotlinx.android.synthetic.main.row_function.view.*
  *
  *  SOP !!! RecyclerView建置步驟(使用匿名內部類別的adapter和資料來源為假資料(放在屬性)) :
  *  1.   設定RecyclerView的layout管理及細節 EX: recycler.layoutManager = LinearLayoutManager(this) & recycler.setHasFixedSize(true)
- *  2.   設計指定adapter EX : recycler.adapter = FunctionAdapter()
- *  3.   建立匿名內部adapter先打好外框 EX: inner class FunctionAdapter() : RecyclerView.Adapter<FunctionHolder>(){ }
- *  4.   建立ViewHolder EX : class FunctionHolder(view: View) : RecyclerView.ViewHolder(view){ 裡面打綁定元件的程式碼(ex:var nameText: TextView = view.name) }
- *  5.   回到adapter 補上泛型裡面的viewHolder類別 EX : RecyclerView.Adapter<FunctionHolder> 並且 補上空的建構子 EX : 括號()
- *  5-1. 使用燈泡熱鍵 選擇"implement members"選項,自動產生覆寫出三個方法onCreateViewHolder & onBindViewHolder & getItemCount
+ *  2.   建立匿名內部adapter先打好外框 EX: inner class FunctionAdapter() : RecyclerView.Adapter<>(){ }
+ *  3.   建立ViewHolder EX : class FunctionHolder(view: View) : RecyclerView.ViewHolder(view){ 裡面打綁定元件的程式碼(ex:var nameText: TextView = view.name) }
+ *  4.   創建RecyclerView裡面的單一欄位layout檔 EX : row_function.xml
+ *  5.   補上ViewHolder layout (row_function.xml) 元件
+ *  6.   回到adapter 補上泛型裡面的viewHolder類別 EX : RecyclerView.Adapter<FunctionHolder> , 並且 補上空的建構子 EX : 括號()
+ *  7.   使用燈泡熱鍵 選擇"implement members"選項,自動產生覆寫出三個方法onCreateViewHolder & onBindViewHolder & getItemCount
  *       EX : override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FunctionHolder { } & override fun onBindViewHolder(holder: FunctionHolder, position: Int) { } &  override fun getItemCount(): Int { }
- *  6.   補上覆寫三個方法的實作的程式碼
- *  7.   回到步驟二 打上自定義方法名字的adapter EX:  FunctionAdapter()
- *  8.   即完成
+ *  8.   補上覆寫三個方法的實作的程式碼
+ *  9.   設計指定adapter,打上自定義方法名字的adapter EX : recycler.adapter = FunctionAdapter()
+ *  10.   即完成
  */
 class RecyclerViewMainActivity : AppCompatActivity() {
     val TAG = RecyclerViewMainActivity::class.java.simpleName
@@ -95,6 +98,11 @@ class RecyclerViewMainActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: FunctionHolder, position: Int) {
             holder.nameText.text = functions.get(position)              // position就是當他要顯示第幾列資料的時候會傳進來的一個整數值
+
+            // 測試點擊選項監聽事件
+//            holder.nameText.setOnClickListener {
+//                Log.d(TAG, "recycleritem : " + position)
+//            }
         }
 
         override fun getItemCount(): Int { // 裡面有幾筆資料 , 這邊範例資料為假資料(在該頁面的屬性) EX : val functions
