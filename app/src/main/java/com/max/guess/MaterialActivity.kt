@@ -124,14 +124,14 @@ class MaterialActivity : AppCompatActivity() {
 //            database.recordDao().insert(record)
 //        }.start()                                               // .start()方法:執行該執行緒
 
-        /**單例模式*/
+        /**單例模式 , 8-2章節因使用Coroutines 協程該段程式碼的getAll()會報錯,原因:只能在協程裡面的程式碼中使用,而改在RecordListActivity.kt去實作他,所以先註解起來*/
         // Room read test
-        AsyncTask.execute {
-            val list = GameDatabase.getInstance(this)?.recordDao()?.getAll()
-            list?.forEach {
-                Log.d(TAG, "record: ${it.nickname} ${it.counter}");
-            }
-        }
+//        AsyncTask.execute {
+//            val list = GameDatabase.getInstance(this)?.recordDao()?.getAll()
+//            list?.forEach {
+//                Log.d(TAG, "record: ${it.nickname} ${it.counter}");
+//            }
+//        }
 
     }
 

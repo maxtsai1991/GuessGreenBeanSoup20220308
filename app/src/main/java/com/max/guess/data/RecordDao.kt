@@ -12,7 +12,7 @@ interface RecordDao {                                // 設計Dao 用interface�
     fun insert(record : Record)                       // 設計Dao,新增資料
 
     @Query("select * from record")              // 查詢 : Room 查詢標示語法
-    fun getAll() : List<Record>                       // 設計Dao,取得全部得紀錄 , 不用給任何參數, 會回傳list集合,裡面包含了許多Record資料
+    fun getAll() : List<Record>               // 設計Dao,取得全部得紀錄 , 不用給任何參數, 會回傳list集合,裡面包含了許多Record資料 ; +上suspend關鍵字之後,getAll()就可以在Coroutines去執行 (目前先不加suspend關鍵字,因會報錯,以留言請教老師)
 
 
 }

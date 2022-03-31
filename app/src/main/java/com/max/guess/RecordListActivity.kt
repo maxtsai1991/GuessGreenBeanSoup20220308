@@ -6,6 +6,9 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.max.guess.data.GameDatabase
 import kotlinx.android.synthetic.main.activity_record_list.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class RecordListActivity : AppCompatActivity() {
     /**
@@ -16,14 +19,26 @@ class RecordListActivity : AppCompatActivity() {
      * 該頁的item Layout : row_record.xml
      * 為什麼獨立出adapter: 因為這個紀錄清單,他可能是一個到處都可以用的清單
      */
+
+    /**
+     * Coroutines (該頁使用到CoroutineScope) 協程說明:
+     *      在目前的執行緒裡面,同時間可以生出輕量的一個方法,新版的Room : 2.1.0 已經可以支援Coroutines的實作
+     *      1.   CoroutineScope(吃CoroutineContext,要告訴他你有什麼樣的情境)
+     *      1-2. CoroutineContext 官方已經定義好了,使用Dispatchers這個類別,這類別當中定義了幾個常見常用的方法(EX:Dispatchers.IO、Dispatchers.Default、Dispatchers.Main)
+     *      1-3. 而因為要使用比較耗時的工作,所以選擇Dispatchers.IO
+     *
+     * this@RecordListActivity 說明:
+     *      原先打this 要修改成 this@RecordListActivity
+     *      原因:原this代表CoroutineScope,而這邊this則是指RecordListActivity
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_record_list)
 
-        AsyncTask.execute { /**另開一個執行緒 EX : AsyncTask.execute { }*/
+        CoroutineScope(Dispatchers.IO).launch {
             //取得 records
-            val records = GameDatabase.getInstance(this)?.recordDao()?.getAll()
-
+            val records = GameDatabase.getInstance(this@RecordListActivity)?.
+            recordDao()?.getAll()
             /**
              * let?.{ }區塊設計說明 :
              *      假如records是null 區塊內就不會執行
@@ -34,7 +49,7 @@ class RecordListActivity : AppCompatActivity() {
              */
             records?.let {
                 runOnUiThread {
-                    recycler.layoutManager = LinearLayoutManager(this)  // 注意 這裡的recycler是Layout檔(activity_record_list.xml) RecyclerView ID
+                    recycler.layoutManager = LinearLayoutManager(this@RecordListActivity)  // 注意 這裡的recycler是Layout檔(activity_record_list.xml) RecyclerView ID
                     recycler.setHasFixedSize(true) // 設定固定大小
                     recycler.adapter = RecordAdapter(it) // 設定adapter ; 注意1 : RecordAdapter裡面必須要有一個List集合, 注意2 : 這裡寫it是因為.let{ } 括號裡面it代表 Record的List資料
                 }
