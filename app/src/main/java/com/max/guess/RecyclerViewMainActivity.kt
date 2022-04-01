@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_recycler_view_main.*
 import kotlinx.android.synthetic.main.row_function.view.*
+import org.json.JSONArray
 import java.net.URL
 
 /**
@@ -64,6 +65,22 @@ import java.net.URL
  *  3. 例外SocketException: socket failed: EPERM(operation not permitted) 解決方法: 將模擬器上該app移除 再重新build
  *  4. 例外IOException: Cleartext HTTP traffic to 要連線的網址 not permitted 解決方法: 允許使用非https , 要去manifests 的<application 標籤裡面加上  android:usesCleartextTraffic="true"
  */
+
+/**
+ *  9-2 讀取網路上的JSON資料並解析它 筆記:
+ *  影片裡api網址 : "api.snooker.org/?t=5&s=2020" (無法使用)
+ *  這裡範例改用api網址 : "https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6" (是JsonArray裡面包著JsonObject)
+ *  步驟:
+ *      1. 開一個子執行緒 EX : Thread { }.start()
+ *      2. 貼上API URL EX : val data = URL("https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6").readText()
+ *      3. 測試有無抓到資料 , 並在Logcat上查看 EX : println(data)
+ *      4. 可以看該API 網站 裡面有 JSON陣列 包著很多 JSON物件 , 物件裡面又有屬性 EX : UID 、 title
+ *      5. 因為此API 網站 第一個看到的是 [] 中括號 ,所以餵給它的時候,它是陣列,請使用JSONArray,它可以接收字串資料,然後產生JSON的陣列,最後把JSON的陣列存起來 EX : val array = JSONArray(data)
+ *      6. 接著用for迴圈一個一個印出來 ,這樣就可以把所有的JSONArray裡面的內容通通印出來 EX :  for (i in 0..array.length()-1){ }
+ *      7. 回到JSON格式的時候 , 裡面是個JSON物件 ( 用花括號{}包起來 ) , 所以要取得JSON物件 ,for迴圈裏面 EX : val obj = array.getJSONObject(i)
+ *      8. 印出想要的屬性所對應的資料 ,這裡想要UID 、 title屬性資料 EX : println("UID : " + obj.getString("UID")+ " , title : " +obj.getString("title"))
+ *      9. 第8點要注意 如果屬性資料沒有雙引號 則使用 getint("屬性名稱") , 反之有雙引號則使用getString("屬性名稱")
+ */
 class RecyclerViewMainActivity : AppCompatActivity() {
     val TAG = RecyclerViewMainActivity::class.java.simpleName
     /** 7-2章節 新增Guess game(猜數字遊戲) & Record list(紀錄清單) 分別導到MaterialActivity & RecordListActivity*/
@@ -92,8 +109,14 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_recycler_view_main)
 
         Thread {
-            val data = URL("http://tw.yahoo.com").readText() // 將全部資料讀進來,而此方法無法作後續篩選處理
 //        val data = URL("https://tw.yahoo.com").openStream().bufferedReader() // 此方法可以作後續篩選處理
+            val data = URL("https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6").readText() // 將全部資料讀進來,而此方法無法作後續篩選處理
+            println(data)
+            val array = JSONArray(data)
+            for (i in 0..array.length()-1){
+                val obj = array.getJSONObject(i) // getJSONObject(index : Int)說明 : 當我給它位置得值,它就給我JSONObject資料
+                println("UID : " + obj.getString("UID")+ " , title : " +obj.getString("title")) // 取得API上 UID屬性及title屬性資料
+            }
         }.start()
 
 
