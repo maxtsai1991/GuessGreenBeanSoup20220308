@@ -50,7 +50,7 @@ dependencies {
     // Kotlin MVVM 要導入以上這些
 
     // Room Libs
-    def room_version = "2.3.0"
+    def room_version = "2.4.0"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-common:$room_version"
     implementation "androidx.room:room-ktx:$room_version"             // 在8-1章節 除了導入Coroutines協程 Libs外 ,而外再導入這行,就可以在Room上面完全支援Coroutines協程

@@ -8,6 +8,11 @@ import androidx.room.Room
 import com.max.guess.data.GameDatabase
 import com.max.guess.data.Record
 import kotlinx.android.synthetic.main.activity_record.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 /**
  * ADB除錯工具指令 (此範例是用getSharedPreferences方法寫入資料到模擬器,並用ADB指令查看有無進到檔案裏面):
@@ -45,10 +50,16 @@ import kotlinx.android.synthetic.main.activity_record.*
  * 9.  使用sqlite語法 (查詢資料庫所有資料),      EX : select * from Record;
  * 9-1.使用sqlite語法 (查詢資料庫欄位),         EX : .tables
  */
-class RecordActivity : AppCompatActivity() {
+class RecordActivity : AppCompatActivity() ,CoroutineScope{
+    private lateinit var job: Job
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.Main
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_record)
+        job = Job()
+
         val count = intent.getIntExtra("COUNTER(次數)", -1)       // .getIntExtra("和上一頁自訂義字串標籤要寫一模一樣", 當沒有拿到資料時給予預設值) ,此資料是由MateriaActivity.kt傳遞過來的
         counter.setText(count.toString())                                         //  MateriaActivity.kt上一頁取得的資料(count)轉成字串,貼到TextView上(id:counter)
         /**
@@ -66,32 +77,20 @@ class RecordActivity : AppCompatActivity() {
                 .apply()                                                          // 把資料放完後要儲存 可以呼叫兩種方法 1 .commit() : 在該行之後會把資料寫進去   2 .apply() : 不一定會在該行之後寫進去,會利用技巧在有空的時候寫進去 ; 如再下一行就要讀取他就要用commit()方法,反之則用apply()方法
 
             // insert to Room
-            // Room test (當猜對後,輸入完暱稱,便會透過Room將暱稱及猜測次數新增至資料庫)
-            /**
-             * 1. 先得到database
-             * 2. Room.databaseBuilder( context , 傳入GameDatabase類別 , 自訂義db名字ex:game.db )
-             * 3. database生成之後,必須呼叫.build()方法,才可以產生出你要的GameDatabase物件
-             * 4. 建立產生測試用紀錄
-             * 5. 不能用UI Main 主執行緒會報錯, 要用子執行緒 EX :  Thread(){ database.recordDao().insert(record) } ; 報錯訊息: 無法訪問主線程上的數據庫，因為它可能會長時間鎖定 ui (cannot access database on the main thread since it may potentially lock the ui for a long period of time.)
-             */
-
-//            val database = Room.databaseBuilder(this,
-//                GameDatabase::class.java,"game.db")
-//                .build()
-
-//            val record = Record(nick,count)
-
-            Thread(){
-//                database.recordDao().insert(record)
-                GameDatabase.getInstance(this)?.recordDao()?. // 用單例模式取得GameDatabase物件,因有可能是null所以要加"?",在使用GameDatabase物件下的.recordDao()方法,取得Dao,同樣有可能是null所以要加"?"
-//                insert(record)
+            launch {
+                GameDatabase.getInstance(this@RecordActivity)?.recordDao()?. // 用單例模式取得GameDatabase物件,因有可能是null所以要加"?",在使用GameDatabase物件下的.recordDao()方法,取得Dao,同樣有可能是null所以要加"?"
                 insert(Record(nick,count)) // 縮寫方式 等於 database.recordDao().insert(record) ; insert(record)
-            }.start()
+            }
 
             val intent = Intent()
             intent.putExtra("NICK",nick)
             setResult(RESULT_OK,intent)                                           // setResult() 方法規定要有一個int值(resultCode),不需要去被結果碼,直接打RESULT_OK,當我們按下ok之後,會將結果碼帶到結果裡面
             finish()                                                              // 當MaterialActivity.kt猜對數字後,會跳到RecordActivity.kt,而點選save按鈕後會呼叫finish()方法,結束該頁並回到MaterialActivity.kt頁面(因RecordActivity前一個activity是MaterialActivity所以結束後會回到MaterialActivity)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 }
