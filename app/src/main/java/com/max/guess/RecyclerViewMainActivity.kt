@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_recycler_view_main.*
 import kotlinx.android.synthetic.main.row_function.view.*
+import java.net.URL
 
 /**
  * 1. 建立RecyclerViewMainActivity原因備忘錄:
@@ -53,7 +54,15 @@ import kotlinx.android.synthetic.main.row_function.view.*
  *       EX : override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FunctionHolder { } & override fun onBindViewHolder(holder: FunctionHolder, position: Int) { } &  override fun getItemCount(): Int { }
  *  8.   補上覆寫三個方法的實作的程式碼
  *  9.   設計指定adapter,打上自定義方法名字的adapter EX : recycler.adapter = FunctionAdapter()
- *  10.   即完成
+ *  10.  即完成
+ */
+
+/**
+ *  9-1 UI執行緒不能執行耗時工作,Android網路連線會遇到的問題 筆記:
+ *  1. 例外NetworkOnMainThreadException (Android網路連線的工作不能在MainThread主執行緒,因為主執行緒是要跟使用者互動的),所以要用子執行緒去跑耗時工作 EX : Thread { }.start()
+ *  2. 例外SecurityException:Permission denied(missing INTERNET permission?), 解決方法:要去manifests加網路權限 EX : 在manifests 加入 <uses-permission android:name="android.permission.INTERNET"/>
+ *  3. 例外SocketException: socket failed: EPERM(operation not permitted) 解決方法: 將模擬器上該app移除 再重新build
+ *  4. 例外IOException: Cleartext HTTP traffic to 要連線的網址 not permitted 解決方法: 允許使用非https , 要去manifests 的<application 標籤裡面加上  android:usesCleartextTraffic="true"
  */
 class RecyclerViewMainActivity : AppCompatActivity() {
     val TAG = RecyclerViewMainActivity::class.java.simpleName
@@ -81,6 +90,12 @@ class RecyclerViewMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recycler_view_main)
+
+        Thread {
+            val data = URL("http://tw.yahoo.com").readText() // 將全部資料讀進來,而此方法無法作後續篩選處理
+//        val data = URL("https://tw.yahoo.com").openStream().bufferedReader() // 此方法可以作後續篩選處理
+        }.start()
+
 
         // RecyclerView (清單功能表)
         recycler.layoutManager = LinearLayoutManager(this) // 從layout裡面取得RecyclerView(recycler是layout RecyclerView的ID),告訴RecyclerView 元件設定要設定什麼
