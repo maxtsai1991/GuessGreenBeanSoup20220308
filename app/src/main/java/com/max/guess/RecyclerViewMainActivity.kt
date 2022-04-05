@@ -11,13 +11,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.max.guess.data.Event
 import kotlinx.android.synthetic.main.activity_recycler_view_main.*
 import kotlinx.android.synthetic.main.row_function.view.*
 import org.json.JSONArray
 import java.net.URL
 
 /**
- * 1. 建立RecyclerViewMainActivity原因備忘錄:
+ * 1. 建立RecyclerViewMainActivity原因備忘錄 :
  *      此RecyclerViewMainActivity為綠豆湯影片7-1章節建立,因影片是直接砍掉原有MainActivity程式碼當示範,
  *      而為了保留原有寫的程式碼,因而另開此RecyclerViewMainActivity,往後影片示範動到MainActivity就動該頁(RecyclerViewMainActivity)
  *
@@ -31,6 +32,7 @@ import java.net.URL
  * */
 
 /**
+ * RecyclerView 筆記 :
  * 一、RecyclerView(回收機制的元件) 筆記:
  *  1.  RecyclerView 需要 adapter來顯示資料
  *  2.  adapter 負責他的資料來源 跟 他的展示樣貌
@@ -81,6 +83,17 @@ import java.net.URL
  *      8. 印出想要的屬性所對應的資料 ,這裡想要UID 、 title屬性資料 EX : println("UID : " + obj.getString("UID")+ " , title : " +obj.getString("title"))
  *      9. 第8點要注意 如果屬性資料沒有雙引號 則使用 getint("屬性名稱") , 反之有雙引號則使用getString("屬性名稱")
  */
+
+/**
+ * 9-3 使用外掛工具產生data class,為什麼? A :因Json資料,有時候真的蠻複雜的,一個一個比對,去建立它的類別或data class是很辛苦的,所以才使用外掛幫助
+ *  data class(資料類別) 補充說明 : 專門讓我存放資料模別
+ *  使用FireFox瀏覽器(因可直接查看Json API格式),貼上範例網址(https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6)
+ *  1.Android Studio添加外掛,雙擊兩下Shift,搜尋:Plugins,在Marketplace搜尋:JSON To Kotlin Class(JsonToKotlinClass),並安裝它,安裝完要重開Android Studio
+ *  2.使用FireFox瀏覽器去到範例網址,切到原始資料標籤,複製範例的json格式資料
+ *  3.新建 Kotlin Class (名稱叫Model(資料模型)), 插入外掛(快捷鍵Alt + Insert), 選擇 Kotlin data classes from JSON, 先去Advanced設定>選擇Other標籤,將"Enable Order By Alphabetical"(按照英文字母排序)勾選取消, 再貼上範例的json格式資料並取名(EX:Event), 點選Generate
+ *  4.即創建完data class(範例Json格式的資料類別)
+ *
+ */
 class RecyclerViewMainActivity : AppCompatActivity() {
     val TAG = RecyclerViewMainActivity::class.java.simpleName
     /** 7-2章節 新增Guess game(猜數字遊戲) & Record list(紀錄清單) 分別導到MaterialActivity & RecordListActivity*/
@@ -115,7 +128,11 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             val array = JSONArray(data)
             for (i in 0..array.length()-1){
                 val obj = array.getJSONObject(i) // getJSONObject(index : Int)說明 : 當我給它位置得值,它就給我JSONObject資料
-                println("UID : " + obj.getString("UID")+ " , title : " +obj.getString("title")) // 取得API上 UID屬性及title屬性資料
+                val id = obj.getString("UID")
+                val title = obj.getString("title")
+                val startDate = obj.getString("startDate")
+                val endDate = obj.getString("endDate")
+                println("UID : " + id + " , title : " + title + " , startDate : " + startDate + " , endDate : " + endDate) // 取得API上 UID、title、startDate、endDate屬性資料
             }
         }.start()
 
