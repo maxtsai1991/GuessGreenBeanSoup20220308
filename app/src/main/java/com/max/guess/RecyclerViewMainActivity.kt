@@ -11,7 +11,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.max.guess.data.Event
+import com.max.guess.data.EventResult
 import kotlinx.android.synthetic.main.activity_recycler_view_main.*
 import kotlinx.android.synthetic.main.row_function.view.*
 import org.json.JSONArray
@@ -92,6 +94,17 @@ import java.net.URL
  *  2.使用FireFox瀏覽器去到範例網址,切到原始資料標籤,複製範例的json格式資料
  *  3.新建 Kotlin Class (名稱叫Model(資料模型)), 插入外掛(快捷鍵Alt + Insert), 選擇 Kotlin data classes from JSON, 先去Advanced設定>選擇Other標籤,將"Enable Order By Alphabetical"(按照英文字母排序)勾選取消, 再貼上範例的json格式資料並取名(EX:Event), 點選Generate
  *  4.即創建完data class(範例Json格式的資料類別)
+ */
+
+/**
+ * 9-4 使用第三方類別庫Gson快速解析JSON得到集合 筆記:
+ * Gson GitHub : https://github.com/google/gson
+ * 添加Gson Libs 在 build.gradle(Module) EX : implementation 'com.google.code.gson:gson:2.9.0'
+ * 1. 呼叫Gson類別庫的建構子,先把這個物件建立出來 EX : Gson()
+ * 2. 使用fromJson()方法 EX : Gson().fromJson( )
+ * 3. 放入Json資料, Json資料就是從網路上讀到的Json資料, 因為先前整個資料,所產生的是一個EventResult ( class EventResult : ArrayList<Event>() ) ,
+ *    再加上類別標示它,告訴它未來會得到一個EventResult,EventResult裡面就是一個集合( EventResult : ArrayList<Event>() ),那可以從集合裡面取出很多的Event EX : Gson().fromJson(data, EventResult::class.java)
+ * 4. 印出全部轉成Gson資料,用forEach EX : result.forEach { Log.d(TAG, "RecyclerViewActivity_onCreate: $it");  }
  *
  */
 class RecyclerViewMainActivity : AppCompatActivity() {
@@ -114,7 +127,6 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         "8.RecyclerViewDataTest8",
         "9.RecyclerViewDataTest9",
         "10.RecyclerViewDataTest10",
-
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -125,15 +137,28 @@ class RecyclerViewMainActivity : AppCompatActivity() {
 //        val data = URL("https://tw.yahoo.com").openStream().bufferedReader() // 此方法可以作後續篩選處理
             val data = URL("https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6").readText() // 將全部資料讀進來,而此方法無法作後續篩選處理
             println(data)
-            val array = JSONArray(data)
-            for (i in 0..array.length()-1){
-                val obj = array.getJSONObject(i) // getJSONObject(index : Int)說明 : 當我給它位置得值,它就給我JSONObject資料
-                val id = obj.getString("UID")
-                val title = obj.getString("title")
-                val startDate = obj.getString("startDate")
-                val endDate = obj.getString("endDate")
-                println("UID : " + id + " , title : " + title + " , startDate : " + startDate + " , endDate : " + endDate) // 取得API上 UID、title、startDate、endDate屬性資料
+
+            /**
+             * 9-2 Json解析資料(內建類別庫解析資料) 寫法
+             */
+//            val array = JSONArray(data)
+//            for (i in 0..array.length()-1){
+//                val obj = array.getJSONObject(i) // getJSONObject(index : Int)說明 : 當我給它位置得值,它就給我JSONObject資料
+//                val id = obj.getString("UID")
+//                val title = obj.getString("title")
+//                val startDate = obj.getString("startDate")
+//                val endDate = obj.getString("endDate")
+//                println("UID : " + id + " , title : " + title + " , startDate : " + startDate + " , endDate : " + endDate) // 取得API上 UID、title、startDate、endDate屬性資料
+//            }
+
+            /**
+             * 9-4 Gson解析資料(快速解析的類別庫)抓到全部資料 寫法
+             */
+            val result = Gson().fromJson(data, EventResult::class.java)
+            result.forEach {
+                Log.d(TAG, "RecyclerViewActivity_onCreate: $it");
             }
+
         }.start()
 
 
