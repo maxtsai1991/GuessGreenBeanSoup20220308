@@ -72,7 +72,7 @@ import java.net.URL
 
 /**
  *  9-2 讀取網路上的JSON資料並解析它 筆記:
- *  影片裡api網址 : "api.snooker.org/?t=5&s=2020" (無法使用)
+ *  影片裡api網址 : "http://api.snooker.org/?t=5&s=2021"
  *  這裡範例改用api網址 : "https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6" (是JsonArray裡面包著JsonObject)
  *  步驟:
  *      1. 開一個子執行緒 EX : Thread { }.start()
@@ -116,6 +116,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         "Record list(遊戲紀錄清單)",
         "Download coupons(下載優惠券)",
         "News(最新消息)",
+        "Snooker(網路API)",
         "Maps(地圖)",
         "1.RecyclerViewDataTest1",
         "2.RecyclerViewDataTest2",
@@ -134,12 +135,13 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_recycler_view_main)
 
         Thread {
-//        val data = URL("https://tw.yahoo.com").openStream().bufferedReader() // 此方法可以作後續篩選處理
             val data = URL("https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6").readText() // 將全部資料讀進來,而此方法無法作後續篩選處理
-            println(data)
+//            val data = URL("http://api.snooker.org/?t=5&s=2021").readText() // 將全部資料讀進來,而此方法無法作後續篩選處理
+//            println(data)
 
             /**
              * 9-2 Json解析資料(內建類別庫解析資料) 寫法
+             * 備註: 下面解析是使用此API : val data = URL("https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6").readText()
              */
 //            val array = JSONArray(data)
 //            for (i in 0..array.length()-1){
@@ -197,15 +199,16 @@ class RecyclerViewMainActivity : AppCompatActivity() {
     private fun functionClicked(position: Int) {
         /**
          * position 說明:
-         * position 0 代表假資料的Camer(打開相機)選項
-         * position 1 代表假資料的Guess game(猜數字遊戲)選項
-         * position 2 代表假資料的Record list(遊戲紀錄清單選項
+         * position 1 Guess game(猜數字遊戲)選項
+         * position 2 Record list(遊戲紀錄清單)選項
+         * position 5 Snooker(網路API資料)
          * 以此類推
          * 7-2章節 目前只有導兩個不同頁面 ,其他以外未設定, 就用else -> return
          */
         when(position){// 判斷position是什麼樣的值
             1 -> startActivity(Intent(this,MaterialActivity::class.java))
             2 -> startActivity(Intent(this,RecordListActivity::class.java))
+            5 -> startActivity(Intent(this,SnookerActivity::class.java))
             else -> return
         }
     }
