@@ -3,6 +3,8 @@ package com.max.guess
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.max.guess.data.EventResult
 import kotlinx.coroutines.CoroutineScope
@@ -30,18 +32,29 @@ class SnookerActivity : AppCompatActivity() , CoroutineScope{
         setContentView(R.layout.activity_snooker)
 
         /**
+         * Coroutines協程 第三種寫法(使用MVVM寫法):
+         * 1. 取得ViewModel物件 EX : val viewModel = ViewModelProvider(this).get(SnookViewModel::class.java)
+         * 2. 取得ViewModel的LiveData然後在observe觀察它,在實作它 EX :  viewModel.events.observe(this, Observer { events -> Log.d(TAG, "MVVM寫法) SnookerActivity_onCreate(events.size): ${events.size}"); })
+         * 3. Observer{ } 實作方法裡面預設為it : List<Event>! 但名稱不直覺 改成 events
+         */
+        val viewModel = ViewModelProvider(this).get(SnookViewModel::class.java)
+        viewModel.events.observe(this, Observer { events ->
+            Log.d(TAG, "MVVM寫法,API資料筆數) SnookerActivity_onCreate(events.size): ${events.size}"); // Log出API資料有多少筆資料
+        })
+
+        /**
          * Coroutines協程 第二種寫法:
          * 1. 添加CoroutineScope介面 EX : class SnookerActivity : AppCompatActivity() , CoroutineScope{ }
          * 2. 覆寫介面方法 EX : override val coroutineContext: CoroutineContext ; get() = Job()+Dispatchers.IO
          * 3. 就能在onCreate直接使用 launch { 程式碼 } 方法
          */
-        launch {
-            val data = URL("https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6").readText()
-            val events = Gson().fromJson(data, EventResult::class.java)
-            events.forEach {
-                Log.d(TAG, "SnookerActivity_onCreate: $it");
-            }
-        }
+//        launch {
+//            val data = URL("https://cloud.culture.tw/frontsite/trans/SearchShowAction.do?method=doFindTypeJ&category=6").readText()
+//            val events = Gson().fromJson(data, EventResult::class.java)
+//            events.forEach {
+//                Log.d(TAG, "SnookerActivity_onCreate: $it");
+//            }
+//        }
 
         /**
          * Coroutines協程 第一種寫法:

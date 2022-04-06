@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-    // Kotlin MVVM 要導入以下這些,就可使用ViewModel & LiveData
+    // Kotlin MVVM 要導入以下這些,就可使用ViewModel & LiveData  (Android官方網站)參考處:https://developer.android.com/jetpack/androidx/releases/lifecycle#groovy
     def lifecycle_version = "2.5.0-alpha04"
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
@@ -45,7 +45,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
     // LiveData
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
-    // Annotation processor
+    // Annotation processor (標示語法的類別庫)
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
     // Kotlin MVVM 要導入以上這些
 
