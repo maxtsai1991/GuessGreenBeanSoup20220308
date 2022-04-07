@@ -1,8 +1,11 @@
 package com.max.guess
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +14,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -124,11 +129,24 @@ import java.net.URL
  *  5.  設置Spinner點擊事件,使用關鍵字object : OnItemSelectedListener ,需要覆寫兩個方法(快捷鍵:Alt+Enter),兩方法:1.沒有選任何東西 2.已經選了某樣東西
  *  6.  設計點選下拉選單選項方法 , 該章節示範選了某樣東西的方法  EX : override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {  Log.d(TAG, "onItemSelected: ${colors[position]}"); }
  */
+
+/**
+ *  10-2 Android 6 之後一定要的危險權限機制 (該章節使用相機權限)
+ *  在manifests添加
+ *  <uses-feature android:name="android.hardware.camera" android:required="true"/>          // 有相機的硬體才可安裝這個APP
+ *  <uses-permission android:name="android.permission.CAMERA"/>                             // 添加相機危險權限
+ *  1.  在RecyclerView 清單 , 添加相機選項 EX : val functions = listOf<String>( "Camer(開啟相機)" )
+ *  2.  在清單點擊事件,添加實作程式碼
+ *  2-1.先設計跳轉相機方法,這個跳轉相機方法不能隨意執行,因為這個工作一定要經過使用者同意過危險權限(開啟相機)之後,才可執行這段程式碼,所以先將方法獨立出去(快捷鍵Ctrl + Alt + M) 命名:takePhoto() ,這個獨立出來的方法在符合條件的時候才會執行它
+ *  2-2.撰寫if判斷式 ,判斷有無取得permission , 程式邏輯: 當取得Permission就開啟相機, 反之還沒有即跳出對話框 EX :  if(permission == PackageManager.PERMISSION_GRANTED){ }else{ }
+ *  3.  覆寫危險彈窗選項點選後方法(onRequestPermissionsResult),細項說明及程式邏輯參考下面逐行註解補充
+ */
 class RecyclerViewMainActivity : AppCompatActivity() {
+    private val REQUEST_CODE_CAMERA = 100
     val TAG = RecyclerViewMainActivity::class.java.simpleName
     /** 7-2章節 新增Guess game(猜數字遊戲) & Record list(紀錄清單) 分別導到MaterialActivity & RecordListActivity*/
     val functions = listOf<String>(     //array字串,listof是一個集合,裏頭放字串
-        "Camer(打開相機)",
+        "Camer(開啟相機)",
         "Guess game(猜數字遊戲)",
         "Record list(遊戲紀錄清單)",
         "Download coupons(下載優惠券)",
@@ -231,6 +249,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
     private fun functionClicked(position: Int) {
         /**
          * position 說明:
+         * position 0 Camer(打開相機)選項
          * position 1 Guess game(猜數字遊戲)選項
          * position 2 Record list(遊戲紀錄清單)選項
          * position 5 Snooker(網路API資料)
@@ -238,11 +257,35 @@ class RecyclerViewMainActivity : AppCompatActivity() {
          * 7-2章節 目前只有導兩個不同頁面 ,其他以外未設定, 就用else -> return
          */
         when(position){// 判斷position是什麼樣的值
+            0 -> {
+                val permission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) // .checkSelfPermission(Context , 傳入打算檢查的權限字串,這個權限已經訂在Maifest類別(android) EX :  Manifest.permission.CAMERA) ,這個方法呼叫會得到INT整數值
+                if(permission == PackageManager.PERMISSION_GRANTED){                                         // 判斷有無取得permission , 已取得為0沒有取得為-1 ,程式設計的時候不要使用0 or -1 這種常數,這個常數值已經定義在PackageManager類別,程式邏輯: 當取得Permission就開啟相機, 反之還沒有即跳出對話框
+                    takePhoto() // 開啟相機獨立出的方法
+                }else{
+                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), REQUEST_CODE_CAMERA) // 跳出對話框 ,ActivityCompat類別下的.requestPermissions(context,字串陣列(放入所要的權限字串),請求代碼)方法,
+                // 請求代碼補充說明:未來跳出對話框之後,使用者允許或是拒絕,都會回到我們的Activity,需要有個編號值,好知道它是從這邊出去的請求值,不要用常數值,而是要自定義名稱(EX : REQUEST_CODE_CAMERA),將REQUEST_CODE_CAMERA定義在最上方的屬性欄位(快捷鍵:燈泡熱鍵 > Create property 'REQUEST_CODE_CAMERA'),這個值就可以用來判別返回Activity時候的判定值
+                // 當使用者按下對話框某個選項,會回到該Activity裡面的一個方法,需覆寫該方法,方法叫onRequestPermissionsResult(){}方法 (該方法使用快捷鍵Ctrl + O > 輸入叫做onRequestPermissionsResult)
+                }
+            }
             1 -> startActivity(Intent(this,MaterialActivity::class.java))
             2 -> startActivity(Intent(this,RecordListActivity::class.java))
             5 -> startActivity(Intent(this,SnookerActivity::class.java))
             else -> return
         }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) { // 危險彈窗選項點選後所需覆寫的方法(CtrL + O ) , onRequestPermissionsResult建構子說明()傳入三個參數 : 1.請求代碼 2.從requestPermissions()方法傳過來的字串陣列(EX : arrayOf(Manifest.permission.CAMERA)) 3.使用者所按下的結果
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode == REQUEST_CODE_CAMERA){ // if判斷說明,如果使用者按下的是requestCode,剛才去的是,是不是同樣詢問的工作,如果是的話,再多進行一層判斷,
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){//  if判斷說明,如果我的grantResults它是一個多個陣列,可以使用第0個就可以了,拿來比較,看使用者是不是PERMISSION_GRANTED,如果是grantResults就執行打開相機
+                takePhoto()
+            }
+        }
+    }
+
+    private fun takePhoto() {      // 開啟相機獨立出的方法
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE) // 設計Intent物件,利用身上的特別字串 EX : MediaStore.ACTION_IMAGE_CAPTURE ,就可以啟用我們的相機
+        startActivity(intent)
     }
 
     class FunctionHolder(view: View) : RecyclerView.ViewHolder(view){ // 注意事項 Holder 有建構子EX:(view: View) ,直接繼承RecyclerView裡面的ViewHolder,他只有一個建構子就是view物件
