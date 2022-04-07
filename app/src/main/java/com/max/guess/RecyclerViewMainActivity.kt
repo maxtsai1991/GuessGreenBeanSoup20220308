@@ -7,9 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
@@ -131,7 +129,7 @@ import java.net.URL
  */
 
 /**
- *  10-2 Android 6 之後一定要的危險權限機制 (該章節使用相機權限)
+ *  10-2 Android 6 之後一定要的危險權限機制 (該章節使用相機權限) 筆記:
  *  在manifests添加
  *  <uses-feature android:name="android.hardware.camera" android:required="true"/>          // 有相機的硬體才可安裝這個APP
  *  <uses-permission android:name="android.permission.CAMERA"/>                             // 添加相機危險權限
@@ -141,6 +139,23 @@ import java.net.URL
  *  2-2.撰寫if判斷式 ,判斷有無取得permission , 程式邏輯: 當取得Permission就開啟相機, 反之還沒有即跳出對話框 EX :  if(permission == PackageManager.PERMISSION_GRANTED){ }else{ }
  *  3.  覆寫危險彈窗選項點選後方法(onRequestPermissionsResult),細項說明及程式邏輯參考下面逐行註解補充
  */
+
+/**
+ * 10-3 Toolbar上方的選單(Menu)設計 筆記:
+ * 補充說明:APP的上方叫Toolbar / ActionBar , 這個位置可以設計有功能表 , 設計menu功能表如下
+ * 1.  res 右鍵 > New > 新增資源的資料夾(Android Resource Directory) > Resource type欄位 選擇menu > ok
+ * 2.  在資源的資料夾 右鍵 > New > Menu resource file > File name欄位 打上自定義名稱 (EX : menu_main.xml)
+ * 3.  拉Menu Item(Palette)到下面menu(Component Tree)底下
+ * 4.  訂定title & id & icon & showAsAction (EX : title為Cache , id為action_cache , icon為stat_sys_download下載圖示 , showAsAction(圖示要顯示在裡面或是外面的欄位))
+ * 4-1.showAsAction : always(一律顯示) 、 never(不顯示圖示) 、 ifRoom(若有空間則顯示) ,此範例是選擇ifRoom
+ * 回到RecyclerViewMainActivity.kt
+ * 1.  覆寫兩個方法(快捷鍵Ctrl + o) : onCreateOptionsMenu (當我們Activity要出現的時候,會去要一個Menu物件,就是上面表單物件) & onOptionsltemSelected (當使用者去點選它之後)
+ * 2.  onCreateOptionsMenu覆寫方法說明(此方法是完成建立跟顯示) :
+ * 2-1.使用menuInflater類別下.inflate方法(給予設計圖(上面新增的xml) , 想要inflate的物件,剛好方法,傳進來的時候就有menu物件) EX : menuInflater.inflate(R.menu.menu_main, menu)
+ * 3. onOptionsltemSelected覆寫方法說明(此方法是當使用者,如果點選其中一個選項時候,它一定會跑到這個方法來) :
+ * 3-1.判斷使用者點選哪一個選項,查看id,這個id值假如是等於R.id.action_cache (menu的id) 代表它按了下載圖選項,在做點擊事件的程式設計 EX : if(item.itemId == R.id.action_cache){ Log.d(TAG, "Cache selected"); }
+ */
+
 class RecyclerViewMainActivity : AppCompatActivity() {
     private val REQUEST_CODE_CAMERA = 100
     val TAG = RecyclerViewMainActivity::class.java.simpleName
@@ -292,4 +307,15 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         var nameText: TextView = view.name                            // 這裡的程式碼,取決於自己建立一列資料的長相EX : row_function.xml 裡面的呈現一列資料所有元件
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.action_cache){
+            Log.d(TAG, "Cache selected");
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }
