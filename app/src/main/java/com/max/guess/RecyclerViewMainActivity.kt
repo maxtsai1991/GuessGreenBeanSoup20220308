@@ -159,6 +159,8 @@ import java.net.URL
 class RecyclerViewMainActivity : AppCompatActivity() {
     private val REQUEST_CODE_CAMERA = 100
     val TAG = RecyclerViewMainActivity::class.java.simpleName
+    var cacheService : Intent? = null
+
     /** 7-2章節 新增Guess game(猜數字遊戲) & Record list(紀錄清單) 分別導到MaterialActivity & RecordListActivity*/
     val functions = listOf<String>(     //array字串,listof是一個集合,裏頭放字串
         "Camer(開啟相機)",
@@ -315,7 +317,16 @@ class RecyclerViewMainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == R.id.action_cache){
             Log.d(TAG, "Cache selected");
+            cacheService = Intent(this,CacheService::class.java)
+            startService(cacheService)
         }
         return super.onOptionsItemSelected(item)
     }
+    /**
+     * 先註解onStop()方法,此方法是10-4 Service 的 , 因為不註解,點選Snooker選項會報錯,已反應給老師
+     */
+//    override fun onStop() {
+//        super.onStop()
+//        stopService(cacheService)
+//    }
 }
