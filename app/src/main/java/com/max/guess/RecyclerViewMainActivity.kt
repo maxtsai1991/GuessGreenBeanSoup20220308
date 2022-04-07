@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -107,6 +109,21 @@ import java.net.URL
  * 4. 印出全部轉成Gson資料,用forEach EX : result.forEach { Log.d(TAG, "RecyclerViewActivity_onCreate: $it");  }
  *
  */
+
+/**
+ *  10-1 下拉選單 - Spinner顯示固定個數的資料 筆記:
+ *  補充說明:
+ *  清單元件(下拉選單)使用Spinner類別 , Spinner類別可以個別設定資料及Layout長相
+ *  清單元件上面都會有一個方法叫setAdapter,而因為用Kotlin語言,所以直接用adapter方法
+ *  1.  activity_recycler_view_main.xml 添加 Spinner元件(元件位置:Containers > Spinner), 設置Spinner ID
+ *  2.  定義Spinner資料 EX : val colors = arrayOf("Red" , "Green" , "Blue")
+ *  3.  設置Spinner的Layout畫面及資料 ArrayAdapter<T>(Context: Context, Layout , 資料) EX : val adapter = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,colors)
+ *  3-1.可修改Spinner下拉選單的樣式 EX : adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+ *  3-2.Layout不一定要自己產生,可以用Android內建的,可參考C:\Users\s8604\AppData\Local\Android\Sdk\platforms\android-31\data\res\layout底下,有很多內建的Layout,該章節使用simple_spinner_item當範例
+ *  4.  將SpinnerLayout及資料設置給Spinner的adapter EX : spinner.adapter = adapter
+ *  5.  設置Spinner點擊事件,使用關鍵字object : OnItemSelectedListener ,需要覆寫兩個方法(快捷鍵:Alt+Enter),兩方法:1.沒有選任何東西 2.已經選了某樣東西
+ *  6.  設計點選下拉選單選項方法 , 該章節示範選了某樣東西的方法  EX : override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {  Log.d(TAG, "onItemSelected: ${colors[position]}"); }
+ */
 class RecyclerViewMainActivity : AppCompatActivity() {
     val TAG = RecyclerViewMainActivity::class.java.simpleName
     /** 7-2章節 新增Guess game(猜數字遊戲) & Record list(紀錄清單) 分別導到MaterialActivity & RecordListActivity*/
@@ -163,11 +180,26 @@ class RecyclerViewMainActivity : AppCompatActivity() {
 
         }.start()
 
-
         // RecyclerView (清單功能表)
         recycler.layoutManager = LinearLayoutManager(this) // 從layout裡面取得RecyclerView(recycler是layout RecyclerView的ID),告訴RecyclerView 元件設定要設定什麼
         recycler.setHasFixedSize(true)                            // 設定畫面大小是不是固定式
         recycler.adapter = FunctionAdapter()                      // 設定設計adapter , 1. 可以設計adapter為內部類別 (此頁面的adapter為內部類別,inner class) 2. 也可以獨立出adapter class檔
+
+        // 10-1 spinner
+        val colors = arrayOf("Red" , "Green" , "Blue") // 假資料
+        val adapter = ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,colors) // 如資料來源是Array(EX : val colors = arrayOf("Red" , "Green" , "Blue") ),即使用ArrayAdapter,ArrayAdapter裏頭它可以直接給一個型態,這裡用字串String
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)                 // 修改下拉選單樣式
+        spinner.adapter = adapter                                                                    // 將下拉選單樣式及資料設定給adapter
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{                // Spinner點擊事件
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                Log.d(TAG, "onItemSelected: ${colors[position]}");
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+        }
     }
     // Adapter (注意事項: 繼承Adapter要留意要選擇androidx.recyclerview.widget.recyclerView)
     inner class FunctionAdapter() : RecyclerView.Adapter<FunctionHolder>(){ // 需要繼承,而且要呼叫父類別的建構子 EX: 這裡建構子為空建構子
