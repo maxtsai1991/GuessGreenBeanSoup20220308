@@ -269,6 +269,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
          * position 0 Camer(打開相機)選項
          * position 1 Guess game(猜數字遊戲)選項
          * position 2 Record list(遊戲紀錄清單)選項
+         * position 4 News(最新消息)選項
          * position 5 Snooker(網路API資料)
          * 以此類推
          * 7-2章節 目前只有導兩個不同頁面 ,其他以外未設定, 就用else -> return
@@ -286,6 +287,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             }
             1 -> startActivity(Intent(this,MaterialActivity::class.java))
             2 -> startActivity(Intent(this,RecordListActivity::class.java))
+            4 -> startActivity(Intent(this,NewsActivity::class.java))
             5 -> startActivity(Intent(this,SnookerActivity::class.java))
             else -> return
         }
