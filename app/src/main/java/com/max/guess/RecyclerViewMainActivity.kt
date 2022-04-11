@@ -325,10 +325,12 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
     /**
-     * 先註解onStop()方法,此方法是10-4 Service 的 , 因為不註解,點選Snooker選項會報錯,已反應給老師
+     * 先註解onStop()方法,此方法是10-4 Service 的 , 因為不註解,點選Snooker選項會報錯,已反應給老師 , 2022/04/11 已解決 , 增加cacheService是否為空值判斷式
      */
-//    override fun onStop() {
-//        super.onStop()
-//        stopService(cacheService)
-//    }
+    override fun onStop() {
+        super.onStop()
+        if(cacheService != null){
+            stopService(cacheService)
+        }
+    }
 }
