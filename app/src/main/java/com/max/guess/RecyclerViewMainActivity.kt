@@ -170,7 +170,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         "News(最新消息)",
         "Snooker(網路API)",
         "Maps(地圖)",
-        "1.RecyclerViewDataTest1",
+        "1.LifeCycleDemo",
         "2.RecyclerViewDataTest2",
         "3.RecyclerViewDataTest3",
         "4.RecyclerViewDataTest4",
@@ -271,6 +271,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
          * position 2 Record list(遊戲紀錄清單)選項
          * position 4 News(最新消息)選項
          * position 5 Snooker(網路API資料)
+         * position 7 Android Jetpack 第二章 lifecycledemo範例 : LifecycleOwner（被观察者）和LifecycleObserver（观察者）。即通过观察者模式，实现对页面生命周期的监听 如何使用 ? A : 查看Log (startGetLocation() & stopGetLocation())
          * 以此類推
          * 7-2章節 目前只有導兩個不同頁面 ,其他以外未設定, 就用else -> return
          */
@@ -289,6 +290,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             2 -> startActivity(Intent(this,RecordListActivity::class.java))
             4 -> startActivity(Intent(this,NewsActivity::class.java))
             5 -> startActivity(Intent(this,SnookerActivity::class.java))
+            7 -> startActivity(Intent(this,LifeCycleDemoActivity::class.java))
             else -> return
         }
     }

@@ -19,6 +19,9 @@
         android:theme="@style/Theme.GuessGreenBeanSoup"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".LifeCycleDemoActivity"
+            android:exported="false" />
+        <activity
             android:name=".NewsActivity"
             android:exported="false" />
         <activity
