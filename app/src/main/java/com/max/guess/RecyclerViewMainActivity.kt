@@ -175,11 +175,11 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         "9.ViewModelsUseFragment",
         "10.LiveData",
         "11.ViewBinding",
-        "12.RecyclerViewDataTest6",
+        "12.DataBinding",
         "13.RecyclerViewDataTest7",
         "14.RecyclerViewDataTest8",
         "15.RecyclerViewDataTest9",
-        "16.RecyclerViewDataTest10",
+        "16.RecyclerViewDataTest10"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -297,6 +297,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             9 -> startActivity(Intent(this,ViewModelsUseFragmentActivity::class.java))
             10 -> startActivity(Intent(this,LiveDataActivity::class.java))
             11 -> startActivity(Intent(this,ViewBindingActivity::class.java))
+            12 -> startActivity(Intent(this,DataBindingActivity::class.java))
             else -> return
         }
     }
