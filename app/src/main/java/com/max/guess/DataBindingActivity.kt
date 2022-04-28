@@ -9,7 +9,7 @@ import com.max.guess.databinding.ActivityDataBindingBinding
 
 /**
  * DataBinding數據綁定 注意事項 :
- * 1.   參考 : https://ke.qq.com/course/4128266/12397075211681290
+ * 1.   參考 : (騰訊課堂)https://ke.qq.com/course/4128266/12397075211681290 & (官方文件)https://developer.android.google.cn/topic/libraries/data-binding/expressions#collections
  * 2.   注意type 是使用Integer不是int 在R.layout.activity_data_binding
  *           <variable
  *              name="list"
