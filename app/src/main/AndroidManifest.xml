@@ -19,6 +19,9 @@
         android:theme="@style/Theme.GuessGreenBeanSoup"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ViewModelsUseFragmentActivity"
+            android:exported="false" />
+        <activity
             android:name=".ViewModelActivity"
             android:exported="false" />
         <activity

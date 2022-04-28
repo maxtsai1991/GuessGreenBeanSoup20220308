@@ -172,7 +172,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         "6.Maps(地圖)",
         "7.LifeCycleDemo",
         "8.ViewModel",
-        "9.RecyclerViewDataTest3",
+        "9.ViewModelsUseFragment",
         "10.RecyclerViewDataTest4",
         "11.RecyclerViewDataTest5",
         "12.RecyclerViewDataTest6",
@@ -272,7 +272,8 @@ class RecyclerViewMainActivity : AppCompatActivity() {
          * position 4 News(最新消息)選項
          * position 5 Snooker(網路API資料)
          * position 7 Android Jetpack 第二章 lifecycledemo範例 : LifecycleOwner（被观察者）和LifecycleObserver（观察者）。即通过观察者模式，实现对页面生命周期的监听 如何使用 ? A : 查看Log (startGetLocation() & stopGetLocation())
-         * position 8 Android Jetpack 入門課程第一期(騰訊課程) ViewModel的使用 參考 : https://ke.qq.com/course/4128266 , 使用ViewModel 當翻轉螢幕時,不會銷毀畫面Data ; 點擊按鈕及加一
+         * position 8 Android Jetpack 入門課程(騰訊課程) ViewModel的使用 參考 : https://ke.qq.com/course/4128266 , 使用ViewModel 當翻轉螢幕時,不會銷毀畫面Data ; 點擊按鈕及加一
+         * position 9 Android Jetpack 入門課程(騰訊課程) ViewModel實戰案例 參考 : https://ke.qq.com/course/4128266/12397062326779402 , 當點擊按鈕加一,而Fragment A & B 都會一起改變,因為FragmentA & FragmentB 共享 TextView(tvCount)使用 ViewModel & MutableLiveData & observe(觀察者)
          * 以此類推
          * 7-2章節 目前只有導兩個不同頁面 ,其他以外未設定, 就用else -> return
          */
@@ -293,6 +294,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             5 -> startActivity(Intent(this,SnookerActivity::class.java))
             7 -> startActivity(Intent(this,LifeCycleDemoActivity::class.java))
             8 -> startActivity(Intent(this,ViewModelActivity::class.java))
+            9 -> startActivity(Intent(this,ViewModelsUseFragmentActivity::class.java))
             else -> return
         }
     }

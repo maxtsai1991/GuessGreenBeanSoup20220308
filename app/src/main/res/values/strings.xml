@@ -9,7 +9,6 @@
     <string name="Cancel">取消(Cancel)</string>
 
 
-
     <string name="title_activity_material" translatable="false">MaterialActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label" translatable="false">First Fragment</string>
