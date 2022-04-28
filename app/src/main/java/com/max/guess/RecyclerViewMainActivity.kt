@@ -163,23 +163,23 @@ class RecyclerViewMainActivity : AppCompatActivity() {
 
     /** 7-2章節 新增Guess game(猜數字遊戲) & Record list(紀錄清單) 分別導到MaterialActivity & RecordListActivity*/
     val functions = listOf<String>(     //array字串,listof是一個集合,裏頭放字串
-        "Camer(開啟相機)",
-        "Guess game(猜數字遊戲)",
-        "Record list(遊戲紀錄清單)",
-        "Download coupons(下載優惠券)",
-        "News(最新消息)",
-        "Snooker(網路API)",
-        "Maps(地圖)",
-        "1.LifeCycleDemo",
-        "2.RecyclerViewDataTest2",
-        "3.RecyclerViewDataTest3",
-        "4.RecyclerViewDataTest4",
-        "5.RecyclerViewDataTest5",
-        "6.RecyclerViewDataTest6",
-        "7.RecyclerViewDataTest7",
-        "8.RecyclerViewDataTest8",
-        "9.RecyclerViewDataTest9",
-        "10.RecyclerViewDataTest10",
+        "0.Camer(開啟相機)",
+        "1.Guess game(猜數字遊戲)",
+        "2.Record list(遊戲紀錄清單)",
+        "3.Download coupons(下載優惠券)",
+        "4.News(最新消息)",
+        "5.Snooker(網路API)",
+        "6.Maps(地圖)",
+        "7.LifeCycleDemo",
+        "8.ViewModel",
+        "9.RecyclerViewDataTest3",
+        "10.RecyclerViewDataTest4",
+        "11.RecyclerViewDataTest5",
+        "12.RecyclerViewDataTest6",
+        "13.RecyclerViewDataTest7",
+        "14.RecyclerViewDataTest8",
+        "15.RecyclerViewDataTest9",
+        "16.RecyclerViewDataTest10",
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -272,6 +272,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
          * position 4 News(最新消息)選項
          * position 5 Snooker(網路API資料)
          * position 7 Android Jetpack 第二章 lifecycledemo範例 : LifecycleOwner（被观察者）和LifecycleObserver（观察者）。即通过观察者模式，实现对页面生命周期的监听 如何使用 ? A : 查看Log (startGetLocation() & stopGetLocation())
+         * position 8 Android Jetpack 入門課程第一期(騰訊課程) ViewModel的使用 參考 : https://ke.qq.com/course/4128266 , 使用ViewModel 當翻轉螢幕時,不會銷毀畫面Data ; 點擊按鈕及加一
          * 以此類推
          * 7-2章節 目前只有導兩個不同頁面 ,其他以外未設定, 就用else -> return
          */
@@ -291,6 +292,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             4 -> startActivity(Intent(this,NewsActivity::class.java))
             5 -> startActivity(Intent(this,SnookerActivity::class.java))
             7 -> startActivity(Intent(this,LifeCycleDemoActivity::class.java))
+            8 -> startActivity(Intent(this,ViewModelActivity::class.java))
             else -> return
         }
     }
