@@ -174,7 +174,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         "8.ViewModel",
         "9.ViewModelsUseFragment",
         "10.LiveData",
-        "11.RecyclerViewDataTest5",
+        "11.ViewBinding",
         "12.RecyclerViewDataTest6",
         "13.RecyclerViewDataTest7",
         "14.RecyclerViewDataTest8",
@@ -296,6 +296,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             8 -> startActivity(Intent(this,ViewModelActivity::class.java))
             9 -> startActivity(Intent(this,ViewModelsUseFragmentActivity::class.java))
             10 -> startActivity(Intent(this,LiveDataActivity::class.java))
+            11 -> startActivity(Intent(this,ViewBindingActivity::class.java))
             else -> return
         }
     }
