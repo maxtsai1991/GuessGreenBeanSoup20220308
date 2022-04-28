@@ -36,6 +36,7 @@ class FragA :Fragment() , View.OnClickListener{
          *  n 加 1 的時候, EX : n++
          *  去改變model.count的值, EX : model.count.value = n
          *  同時頁面上的TextView(tvCount)也去改變,並且轉成字串格式 EX : tvCount.text = n.toString()
+         *  n 要放到全域變數, 不然都只會跳1(永遠都是1),不會往上疊加數字
          */
         n++
 //        model.count.value = n
