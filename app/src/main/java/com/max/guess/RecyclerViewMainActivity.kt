@@ -177,7 +177,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         "11.ViewBinding",
         "12.DataBinding",
         "13.Lifecycle",
-        "14.RecyclerViewDataTest8",
+        "14.DataBinding2",
         "15.RecyclerViewDataTest9",
         "16.RecyclerViewDataTest10"
     )
@@ -274,6 +274,11 @@ class RecyclerViewMainActivity : AppCompatActivity() {
          * position 7 Android Jetpack 第二章 lifecycledemo範例 : LifecycleOwner（被观察者）和LifecycleObserver（观察者）。即通过观察者模式，实现对页面生命周期的监听 如何使用 ? A : 查看Log (startGetLocation() & stopGetLocation())
          * position 8 Android Jetpack 入門課程(騰訊課程) ViewModel的使用 參考 : https://ke.qq.com/course/4128266 , 使用ViewModel 當翻轉螢幕時,不會銷毀畫面Data ; 點擊按鈕及加一
          * position 9 Android Jetpack 入門課程(騰訊課程) ViewModel實戰案例 參考 : https://ke.qq.com/course/4128266/12397062326779402 , 當點擊按鈕加一,而Fragment A & B 都會一起改變,因為FragmentA & FragmentB 共享 TextView(tvCount)使用 ViewModel & MutableLiveData & observe(觀察者)
+         * position 10 Android Jetpack 入門課程(騰訊課程) LiveData的使用 參考 : https://ke.qq.com/course/4128266/12397066621746698 , 當點擊按鈕會改變數字,及會改變TextView(tvName) 因為 : 更新到model裡的nameLd值(updateName()方法),而 model.nameLd使用observe(觀察者方法)就會改變的值給予TextView(tvName.text)
+         * position 11 Android Jetpack 入門課程(騰訊課程) ViewBinding 視圖綁定 參考 : https://ke.qq.com/course/4128266/12397070916713994,創建Activity (ViewBindingActivity.kt) & Fragment(FragOne.kt) 頁面 ,並且使用ViewBinding的綁定畫面寫法及存取設定頁面的元件
+         * position 12 Android Jetpack 入門課程(騰訊課程) DataBinding數據綁定 參考 : https://ke.qq.com/course/4128266/12397075211681290
+         * position 13 Android Jetpack 入門課程(騰訊課程) Lifecycle(生命週期)介紹與使用,點擊到該頁查看LOG觀察生命週期 參考 : https://ke.qq.com/webcourse/4128266/104283995#taid=12397079506648586&vid=387702292255362821
+         * position 14 Android Jetpack 入門課程(騰訊課程) DataBinding雙向數據綁定 參考 : https://ke.qq.com/webcourse/4128266/104283995#taid=12397083801615882&vid=387702292255353219
          * 以此類推
          * 7-2章節 目前只有導兩個不同頁面 ,其他以外未設定, 就用else -> return
          */
@@ -299,6 +304,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             11 -> startActivity(Intent(this,ViewBindingActivity::class.java))
             12 -> startActivity(Intent(this,DataBindingActivity::class.java))
             13 -> startActivity(Intent(this,LifecycleActivity::class.java))
+            14 -> startActivity(Intent(this,DataBindingActivity2::class.java))
             else -> return
         }
     }
