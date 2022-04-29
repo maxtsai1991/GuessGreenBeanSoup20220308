@@ -176,7 +176,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         "10.LiveData",
         "11.ViewBinding",
         "12.DataBinding",
-        "13.RecyclerViewDataTest7",
+        "13.Lifecycle",
         "14.RecyclerViewDataTest8",
         "15.RecyclerViewDataTest9",
         "16.RecyclerViewDataTest10"
@@ -298,6 +298,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             10 -> startActivity(Intent(this,LiveDataActivity::class.java))
             11 -> startActivity(Intent(this,ViewBindingActivity::class.java))
             12 -> startActivity(Intent(this,DataBindingActivity::class.java))
+            13 -> startActivity(Intent(this,LifecycleActivity::class.java))
             else -> return
         }
     }
