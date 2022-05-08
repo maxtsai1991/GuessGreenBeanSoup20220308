@@ -19,6 +19,9 @@
         android:theme="@style/Theme.GuessGreenBeanSoup"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".AsynThreadActivity"
+            android:exported="false" />
+        <activity
             android:name=".DataBindingActivity2"
             android:exported="false" />
         <activity

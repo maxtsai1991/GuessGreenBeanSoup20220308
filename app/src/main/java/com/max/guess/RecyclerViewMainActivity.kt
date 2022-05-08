@@ -178,7 +178,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         "12.DataBinding",
         "13.Lifecycle",
         "14.DataBinding2",
-        "15.RecyclerViewDataTest9",
+        "15.AsynThread",
         "16.RecyclerViewDataTest10"
     )
 
@@ -305,6 +305,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             12 -> startActivity(Intent(this,DataBindingActivity::class.java))
             13 -> startActivity(Intent(this,LifecycleActivity::class.java))
             14 -> startActivity(Intent(this,DataBindingActivity2::class.java))
+            15 -> startActivity(Intent(this,AsynThreadActivity::class.java))
             else -> return
         }
     }
