@@ -279,6 +279,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
          * position 12 Android Jetpack 入門課程(騰訊課程) DataBinding數據綁定 參考 : https://ke.qq.com/course/4128266/12397075211681290
          * position 13 Android Jetpack 入門課程(騰訊課程) Lifecycle(生命週期)介紹與使用,點擊到該頁查看LOG觀察生命週期 參考 : https://ke.qq.com/webcourse/4128266/104283995#taid=12397079506648586&vid=387702292255362821
          * position 14 Android Jetpack 入門課程(騰訊課程) DataBinding雙向數據綁定 參考 : https://ke.qq.com/webcourse/4128266/104283995#taid=12397083801615882&vid=387702292255353219
+         * position 15 同步ｖｓ異步，主執行緒與子執行緒，使用Ｈａｎｄｌｅ與Ｍｅｓｓａｇｅ類 參考 : https://www.bilibili.com/video/BV1j54y1H7Kj/?spm_id_from=333.788.recommend_more_video.0
          * 以此類推
          * 7-2章節 目前只有導兩個不同頁面 ,其他以外未設定, 就用else -> return
          */
