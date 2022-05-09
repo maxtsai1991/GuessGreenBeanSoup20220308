@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {                                      
         Log.d(TAG,"秘密數字(secret) : " + secretNumber.secret)                // Log出秘密數字(1-10亂數產生的數字 > secretNumber.secret) , Logcat 搜尋MainActivity可得知secretNumber.secret
     }
 
+
     fun check(view : View){                                                       // ok按鈕的方法 , 要跟xml > bt_ok按鈕onClick欄位寫一樣名稱,大小寫都要一樣
         val n = ed_number.text.toString().toInt()                                 // ed_number是文字輸入方塊的ID , .text是取得文字輸入方塊的類別(Editable類別) , .toString() : 取得文字 , .toInt() : 轉成整數 , 再將取得的存到val n
         println("使用者輸入的數字(number) : $n")                                     // 可在Logcat 搜尋字串 找到n的值 , n = 使用者輸入的數字
