@@ -179,7 +179,9 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         "13.Lifecycle",
         "14.DataBinding2",
         "15.AsynThread",
-        "16.RecyclerViewDataTest10"
+        "16.SQLiteExample",
+        "17.RecyclerViewDataTest10",
+        "18.RecyclerViewDataTest10"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -280,6 +282,10 @@ class RecyclerViewMainActivity : AppCompatActivity() {
          * position 13 Android Jetpack 入門課程(騰訊課程) Lifecycle(生命週期)介紹與使用,點擊到該頁查看LOG觀察生命週期 參考 : https://ke.qq.com/webcourse/4128266/104283995#taid=12397079506648586&vid=387702292255362821
          * position 14 Android Jetpack 入門課程(騰訊課程) DataBinding雙向數據綁定 參考 : https://ke.qq.com/webcourse/4128266/104283995#taid=12397083801615882&vid=387702292255353219
          * position 15 同步ｖｓ異步，主執行緒與子執行緒，使用Ｈａｎｄｌｅ與Ｍｅｓｓａｇｅ類 參考 : https://www.bilibili.com/video/BV1j54y1H7Kj/?spm_id_from=333.788.recommend_more_video.0
+         * position 16 碼農日常-『Android studio』SQLite資料庫建立、資料表建立與操作以及Stetho工具 參考 : https://thumbb13555.pixnet.net/blog/post/317439792-android_studio_sqlite_stetho
+         *                                                                                    & https://github.com/thumbb13555/SQLiteExample
+         *                                                                                    & https://mrraybox.blogspot.com/2017/01/android-sqlite-onupgrade.html (SQLite onUpgrade方法的運用)
+         *                                                                                    & https://www.itread01.com/study/sqlite-distinct-keyword.html (SQLite 教學)
          * 以此類推
          * 7-2章節 目前只有導兩個不同頁面 ,其他以外未設定, 就用else -> return
          */
@@ -307,6 +313,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             13 -> startActivity(Intent(this,LifecycleActivity::class.java))
             14 -> startActivity(Intent(this,DataBindingActivity2::class.java))
             15 -> startActivity(Intent(this,AsynThreadActivity::class.java))
+            16 -> startActivity(Intent(this,SQLiteExampleActivity::class.java))
             else -> return
         }
     }

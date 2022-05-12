@@ -70,6 +70,9 @@ dependencies {
     // 9-4 Gson Libs
     implementation 'com.google.code.gson:gson:2.9.0'
 
+    // Stetho 資料庫監視工具 (參考 : https://facebook.github.io/stetho/ & https://github.com/facebook/stetho)
+    implementation 'com.facebook.stetho:stetho:1.6.0'
+
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
