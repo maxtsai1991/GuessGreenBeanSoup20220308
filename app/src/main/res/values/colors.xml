@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="messagecolor">#4CAF50</color>
+    <color name="colorNoteBackground">#FFF3F2EF</color>
 </resources>

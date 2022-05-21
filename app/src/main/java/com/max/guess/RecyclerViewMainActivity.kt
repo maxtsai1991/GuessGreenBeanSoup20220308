@@ -181,7 +181,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         "15.AsynThread",
         "16.SQLiteExample",
         "17.Sharedpreferences",
-        "18.RecyclerViewDataTest10"
+        "18.External Storage"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -287,7 +287,10 @@ class RecyclerViewMainActivity : AppCompatActivity() {
          *                                                                                    & https://mrraybox.blogspot.com/2017/01/android-sqlite-onupgrade.html (SQLite onUpgrade方法的運用)
          *                                                                                    & https://www.itread01.com/study/sqlite-distinct-keyword.html (SQLite 教學)
          * position 17 Shared Preferences-範例(威廉老師) List⾴⾯ : 如同先前範例，顯⽰書籍資料，會從偏好設定檔取得先前儲存的Theme設定 ; Settings⾴⾯ : 如同先前範例，可⽤來切換Theme，並存⼊⾄偏好設定檔
+         * position 18 External Storage-範例(威廉老師) 隨⾝筆記App : 1.離開App時，會⾃動將筆記內容儲存⾄外部儲存體的私有檔案 2. 開啟App時，會⾃動從外部儲存體的私有檔案讀回筆記內容
+         *
          * 7-2章節 目前只有導兩個不同頁面 ,其他以外未設定, 就用else -> return
+         *
          */
         when(position){// 判斷position是什麼樣的值
             0 -> {
@@ -315,6 +318,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             15 -> startActivity(Intent(this,AsynThreadActivity::class.java))
             16 -> startActivity(Intent(this,SQLiteExampleActivity::class.java))
             17 -> startActivity(Intent(this,sharedpreferencesActivity::class.java))
+            18 -> startActivity(Intent(this,ExternalStorageActivity::class.java))
             else -> return
         }
     }
