@@ -18,5 +18,9 @@
 
     <string name="hello_first_fragment" translatable="false">Hello first fragment</string>
     <string name="hello_second_fragment" translatable="false">Hello second fragment. Arg: %1$s</string>
+    <string name="textList" translatable="false">List</string>
+    <string name="textSettings" translatable="false">Settings</string>
+    <string name="textLight" translatable="false">Light</string>
+    <string name="textDark" translatable="false">Dark</string>
 
 </resources>

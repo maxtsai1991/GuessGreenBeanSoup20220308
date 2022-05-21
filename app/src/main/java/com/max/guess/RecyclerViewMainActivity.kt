@@ -180,7 +180,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
         "14.DataBinding2",
         "15.AsynThread",
         "16.SQLiteExample",
-        "17.RecyclerViewDataTest10",
+        "17.Sharedpreferences",
         "18.RecyclerViewDataTest10"
     )
 
@@ -286,7 +286,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
          *                                                                                    & https://github.com/thumbb13555/SQLiteExample
          *                                                                                    & https://mrraybox.blogspot.com/2017/01/android-sqlite-onupgrade.html (SQLite onUpgrade方法的運用)
          *                                                                                    & https://www.itread01.com/study/sqlite-distinct-keyword.html (SQLite 教學)
-         * 以此類推
+         * position 17 Shared Preferences-範例(威廉老師) List⾴⾯ : 如同先前範例，顯⽰書籍資料，會從偏好設定檔取得先前儲存的Theme設定 ; Settings⾴⾯ : 如同先前範例，可⽤來切換Theme，並存⼊⾄偏好設定檔
          * 7-2章節 目前只有導兩個不同頁面 ,其他以外未設定, 就用else -> return
          */
         when(position){// 判斷position是什麼樣的值
@@ -314,6 +314,7 @@ class RecyclerViewMainActivity : AppCompatActivity() {
             14 -> startActivity(Intent(this,DataBindingActivity2::class.java))
             15 -> startActivity(Intent(this,AsynThreadActivity::class.java))
             16 -> startActivity(Intent(this,SQLiteExampleActivity::class.java))
+            17 -> startActivity(Intent(this,sharedpreferencesActivity::class.java))
             else -> return
         }
     }
