@@ -23,5 +23,10 @@
     <string name="textLight" translatable="false">Light</string>
     <string name="textDark" translatable="false">Dark</string>
     <string name="ExternalStorageText" translatable="false">隨⾝筆記App : 1. 離開App時，會⾃動將筆記內容儲存⾄外部儲存體的私有檔案  2. 開啟App時，會⾃動從外部儲存體的私有檔案讀回筆記內容</string>
+    <string name="textSaveNote" translatable="false">Save Note</string>
+    <string name="textEnterTitle" translatable="false">Enter title</string>
+    <string name="textSave" translatable="false">Save</string>
+    <string name="textCancel" translatable="false">Cancel</string>
+    <string name="textNote" translatable="false">Note</string>
 
 </resources>
